@@ -5,7 +5,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { navigationRef } from './RootNavigation';
 
 import InventoryScreen from "./src/views/inventory";
+import RecordsScreen from "./src/views/records";
 import MaterialScreen from "./src/views/material";
+import MaterialSalidaScreen from "./src/views/salidaMaterial";
+import MaterialEntradaScreen from "./src/views/entradaMaterial";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Navigation = () => {
@@ -22,7 +25,8 @@ const Navigation = () => {
       >
         <Stack.Screen name="Inventario" component={TabNavigator} initialParams={{ screen: "Inventario" }} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterial" component={MaterialScreen} options={{headerShown:false}}/>
-        
+        <Stack.Screen name="NewMaterialSalida" component={MaterialSalidaScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="NewMaterialEntrada" component={MaterialEntradaScreen} options={{headerShown:false}}/>
       </Stack.Navigator>
       
     </NavigationContainer>
@@ -40,6 +44,18 @@ function TabNavigator() {
       <Tab.Screen name="Inventario" component={InventoryScreen} options={{headerShown:false, 
         tabBarIcon: ({ focused, color, size }) => (
           <Icon name="home" size={25} color="#000000" />
+        ),}}/>
+      <Tab.Screen name="Registros" component={RecordsScreen} options={{headerShown:false,
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon name="bars" size={25} color="#000000" />
+        ),}}/>
+      <Tab.Screen name="Uniformes" component={RecordsScreen} options={{headerShown:false, 
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon name="tags" size={25} color="#000000" />
+        ),}}/>
+      <Tab.Screen name="Perfil" component={RecordsScreen} options={{headerShown:false, 
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon name="user" size={25} color="#000000" />
         ),}}/>
     </Tab.Navigator>
   );
