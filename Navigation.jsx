@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { navigationRef } from './RootNavigation';
 
+import LoginScreen from "./src/views/login";
+import RegisScreen from "./src/views/register";
 import InventoryScreen from "./src/views/inventory";
 import RecordsScreen from "./src/views/records";
 import MaterialScreen from "./src/views/material";
@@ -16,13 +18,16 @@ const Navigation = () => {
     return (
       <NavigationContainer ref={navigationRef}>      
       <Stack.Navigator 
-        initialRouteName="inventory" 
+        initialRouteName="Login" 
         screenOptions={{
           headerMode: 'screen',
           headerTintColor: 'White',
           headerStyle: { backgroundColor: '#ff9116' },
         }}
       >
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="Register" component={RegisScreen} options={{headerShown:false}}/>
+
         <Stack.Screen name="Inventario" component={TabNavigator} initialParams={{ screen: "Inventario" }} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterial" component={MaterialScreen} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterialSalida" component={MaterialSalidaScreen} options={{headerShown:false}}/>

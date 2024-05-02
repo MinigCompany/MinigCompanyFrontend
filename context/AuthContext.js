@@ -47,11 +47,66 @@ export const AuthProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(false);
     const navigation = props => (useNavigation());
     // Registro
-    const register = (nombre, pais, ciudad, email, universidad, password) =>{
+    const registerM = (nombres, apellidos, telefono, correo, contrasenia,contraseniaConfir) =>{
+      setIsLoading(true);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correo)) {
+            createTwoButtonAlertRegistro("Correo electrónico inválido");
+            setIsLoading(false);
+            return;
+        }
+        if (contrasenia.length < 8) {
+            createTwoButtonAlertRegistro("La contraseña debe tener al menos 8 caracteres");
+            setIsLoading(false);
+            return;
+        }
+        if(contraseniaConfir!=contrasenia){
+          createTwoButtonAlertRegistro("Las contraseñas no coinciden!!");
+          setIsLoading(false);
+          return;
+        }
+        axios.post(`${BASE_URL}/Autenticacion/Registro`,{
+            nombres, apellidos, telefono, correo, contrasenia
+        }).then(res => {
+            let userInfo = res.data;
+            setUserInfo(userInfo);
+            const usuario = AsyncStorage.setItem('userData', JSON.stringify(userInfo));
+            setIsLoading(false);
+            if (usuario!=null){
+                console.log("mi usuario", usuario);
+                createRegistro("Tu usuario se a registrado con éxito");
+                RootNavigation.navigate('Login');
+            }
+        }).catch(e =>{
+            createTwoButtonAlertRegistro("Los credenciales están vacíos o son incorrectos");
+            console.log(`error en registro ${e}`);
+            setIsLoading(false);
+        })
     };
 
     // Login
-    const login = async (email, password) =>{
+    const loginM = async (correo, contrasenia) =>{
+      setIsLoading(true);
+        axios.post(`${BASE_URL}/Autenticacion/login`,{
+            correo,
+            contrasenia
+        }).then(res => {
+            let userInfo = res.data;
+            console.log(userInfo.status+"Hola");
+            setUserInfo(userInfo);
+            const token = AsyncStorage.setItem('userData', JSON.stringify(userInfo))
+            if (userInfo.status){
+                console.log("mi token", token);
+                //navigation.navigate('Cuenta creada');Cuenta creada
+                RootNavigation.navigate('Inventario');
+            }
+            setIsLoading(false);
+
+        }).catch(e => {
+            createTwoButtonAlert();
+            console.log(`login error ${e}`);
+            setIsLoading(false);
+        });
     }
     const checkUserAuthentication = async () =>{        
     }
@@ -66,8 +121,8 @@ export const AuthProvider = ({children}) => {
             value={{
                 isLoading,
                 userInfo,
-                login,
-                register,
+                loginM,
+                registerM,
                 closeSession,
                 checkUserAuthentication
             }}>
