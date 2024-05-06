@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+//import Icon from 'react-native-vector-icons/FontAwesome';
+import { Icon } from 'react-native-elements'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { navigationRef } from './RootNavigation';
@@ -8,6 +9,7 @@ import LoginScreen from "./src/views/login";
 import RegisScreen from "./src/views/register";
 import InventoryScreen from "./src/views/inventory";
 import RecordsScreen from "./src/views/records";
+import UniformsScreen from "./src/views/uniforms";
 import MaterialScreen from "./src/views/material";
 import MaterialSalidaScreen from "./src/views/salidaMaterial";
 import MaterialEntradaScreen from "./src/views/entradaMaterial";
@@ -48,19 +50,19 @@ function TabNavigator() {
     }}>
       <Tab.Screen name="Inventario" component={InventoryScreen} options={{headerShown:false, 
         tabBarIcon: ({ focused, color, size }) => (
-          <Icon name="home" size={25} color="#000000" />
+          <Icon name="home" type='font-awesome' size={25} color="#000000" />
         ),}}/>
       <Tab.Screen name="Registros" component={RecordsScreen} options={{headerShown:false,
         tabBarIcon: ({ focused, color, size }) => (
-          <Icon name="bars" size={25} color="#000000" />
+          <Icon name="pencil-square-o" type='font-awesome' size={25} color="#000000" />
         ),}}/>
-      <Tab.Screen name="Uniformes" component={RecordsScreen} options={{headerShown:false, 
+      <Tab.Screen name="Uniformes" component={UniformsScreen} options={{headerShown:false, 
         tabBarIcon: ({ focused, color, size }) => (
-          <Icon name="tags" size={25} color="#000000" />
+          <Icon name="skin" type='antdesign' size={25} color="#000000" />
         ),}}/>
       <Tab.Screen name="Perfil" component={RecordsScreen} options={{headerShown:false, 
         tabBarIcon: ({ focused, color, size }) => (
-          <Icon name="user" size={25} color="#000000" />
+          <Icon name="user" type='font-awesome' size={25} color="#000000" />
         ),}}/>
     </Tab.Navigator>
   );
