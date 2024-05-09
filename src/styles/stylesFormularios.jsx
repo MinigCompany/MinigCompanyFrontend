@@ -124,5 +124,18 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 16,
       },
+
+    dropdowmMaterial:{
+        height: 50,
+        width:300,
+        borderRadius: 8,
+        backgroundColor:"#fff",
+        padding:10,
+        height: 50,
+        borderBottomWidth: 1,
+        paddingHorizontal: 8,
+        marginLeft:10,
+        marginTop:10
+      },
 })
 export default styles;

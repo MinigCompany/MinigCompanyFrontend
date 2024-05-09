@@ -108,12 +108,31 @@ export const AuthProvider = ({children}) => {
             setIsLoading(false);
         });
     }
-    const checkUserAuthentication = async () =>{        
+    
+    const checkUserAuthentication = async () =>{   
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        if (userData) {
+            //console.log('Usuario autenticado');
+        } else {
+            RootNavigation.navigate('Login');
+            //console.log('Usuario no autenticado');
+        }
+      } catch (error) {
+          console.error('Error al verificar la autenticación:', error);
+      }     
     }
 
 
     //Cerrar sesion
     const closeSession = async () =>{
+      try {
+        await AsyncStorage.removeItem('userData');
+        //RootNavigation.navigate('Login');
+        console.log('Cierre de sesión exitoso');
+      } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+      }
     }
     //
     return(
@@ -124,7 +143,7 @@ export const AuthProvider = ({children}) => {
                 loginM,
                 registerM,
                 closeSession,
-                checkUserAuthentication
+                checkUserAuthentication,
             }}>
             {children}
         </AuthContext.Provider>

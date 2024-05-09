@@ -1,11 +1,48 @@
-import react,  {useContext, useState,useEffect} from "react";
-import { Text, View, TextInput, TouchableOpacity, Image, Modal,ScrollView } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import React,  {useContext, useState,useEffect, useCallback} from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Text, View, TouchableOpacity, Image, Modal,FlatList } from 'react-native';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import styles from '../styles/stylesInventory';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { Dropdown } from 'react-native-element-dropdown';
-const Inventory = () => {
+import {allMaterials,deleteMaterial} from "../services/materialServices";
+import { Icon } from 'react-native-elements'
+let materialAux=null;
+const Inventory = ({route}) => {
     const navigation = useNavigation();
+    const [time, setTime] = useState([]);
+    const [materials, setMaterials] = useState([]);
+    const [nombreUser, setNombreUser] = useState();
+    const [ApellidoUser, setApellidoUser] = useState();
+    const [modalVisible, setModalVisible] = useState(false);
+    useFocusEffect(
+        useCallback(() => {
+            fetchMaterials();
+            getUser();
+        }, [])
+    );
+    
+    const fetchMaterials = async () => {
+        const data = await allMaterials();
+        if (data) {
+          setMaterials(data.Material);
+        }
+    };
+    const getUser = async () =>{   
+        try {
+          const userData = await AsyncStorage.getItem('userData');
+          if (userData) {
+            const aux =  JSON.parse(userData);
+            //console.log("Usuario autenticado: "+ aux.usuario.nombre);
+            setNombreUser(aux.usuario.nombre);
+            setApellidoUser(aux.usuario.apellido)
+          } 
+        } catch (error) {
+            console.error('Error al obtener:', error);
+        }     
+      }
+    const refreshList=()=>{
+        setTime(new Date().getTime());
+    }
     const data = [
         { label: 'Item 1', value: '1' },
         { label: 'Item 2', value: '2' },
@@ -24,10 +61,44 @@ const Inventory = () => {
         }
         return null;
       };
+    const ItemMaterials=({material})=>{
+        return (
+            <View  style={styles.VistaMateriales}>
+                <View style={[styles.Separador,{flex: 1 }]}>
+                    <Text style={styles.txtFiltro}>$ {material.precio.$numberDecimal}</Text> 
+                    <Icon name="paperclip"  type="antdesign" size={25} color="#FF8400" />
+                </View>
+                <View style={[styles.Separador,{flex: 4 }]}>
+                    <Text style={styles.tituloMaterial}>{material.nombreMaterial}</Text>
+                    <Text style={styles.subtitulo}>{material.categoria}</Text>
+                    <View style={styles.VistaCodigo}>
+                        <View style={styles.VistaCodigo}>
+                            <Text style={styles.subtitulo}>Codigo: </Text>
+                            <Text style={styles.subtitulo}>{material._id.substring(0, 5)}</Text>
+                        </View>
+                        <View style={styles.VistaCodigo}>
+                            <Text style={styles.subtitulo}>Cant.</Text>
+                            <Text style={styles.subtitulo}>{material.cantidad}</Text>
+                        </View>
+                    </View>                    
+                </View >
+                <View style={[styles.Separador,{flex: 1 }]}>
+                    <TouchableOpacity onPress={() => {
+                        setModalVisible(true);
+                        materialAux = material;
+                        //console.log(materialAux);
+                    }}
+                    style={styles.colorBtn}>
+                        <Icon name="edit" type="antdesign" size={25} color="#FF8400"/>
+                    </TouchableOpacity> 
+                </View>
+            </View>
+        );
+    }
     return(
         <View style={styles.container}>
-            <View style={styles.mainContainer}>
-                <Text style={styles.txtInfoUser}>Hola, Celia Macas</Text>
+            <View style={[styles.mainContainer,{flex: 1 }]}>
+                <Text style={styles.txtInfoUser}>Hola, {nombreUser} {ApellidoUser}</Text>
                 <Text style={styles.txtBien}>Bienvenida a Mining Company</Text>
                 <View style={styles.VistaInventario}>
                         <Text style={styles.txtInventario}>Inventario</Text>
@@ -35,7 +106,7 @@ const Inventory = () => {
                             <Icon name="search" size={25} color="#282928" />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.VistaNewmaterial} onPress={() => navigation.navigate('NewMaterial')}>
+                    <TouchableOpacity style={styles.VistaNewmaterial} onPress={() => navigation.navigate('NewMaterial',{fnRefresh:refreshList})}>
                         <View style={styles.contenedorTexto}>
                             <Text style={styles.txtNewMaterial}>Nuevo Material</Text>
                         </View>
@@ -88,41 +159,57 @@ const Inventory = () => {
                         }}
                         />
                     </View>
+                    
+                    <View  style={{ flex: 1 }}>
                     <Text style={styles.txtFiltro}>Materiales</Text>
-                    <View >
-                        <ScrollView>
-                            <View  style={styles.VistaMateriales}>
-                                <View style={styles.Separador}>
-                                    <Text style={styles.txtFiltro}>$0.25</Text> 
-                                    <Icon name="search" size={25} color="#282928" />
-                                </View>
-                                <View style={styles.Separador}>
-                                    <Text style={styles.tituloMaterial}>Tornillo Autoperforante</Text>
-                                    <Text style={styles.subtitulo}>Acero Inoxidable</Text>
-                                    <View style={styles.VistaCodigo}>
-                                        <View style={styles.VistaCodigo}>
-                                            <Text style={styles.subtitulo}>Codigo: </Text>
-                                            <Text style={styles.subtitulo}>000000</Text>
-                                        </View>
-                                        <View style={styles.VistaCodigo}>
-                                            <Text style={styles.subtitulo}>Cant.</Text>
-                                            <Text style={styles.subtitulo}>56</Text>
-                                        </View>
-                                    </View>
-                                    
-                                    
-                                </View >
-                                <View style={styles.Separador}>
-                                    <TouchableOpacity
-                                    style={styles.colorBtn}>
-                                        <Icon name="search" size={25} color="#282928" />
-                                    </TouchableOpacity> 
-                                </View>
-                            </View>
-                        </ScrollView>
+                        <FlatList
+                            data={materials}
+                            renderItem={({item})=>{
+                                return <ItemMaterials material={item}/>
+                            }}
+                            keyExtractor={(item)=>{return item._id}}
+                            extraData={time}
+                        />
                     </View>
             </View>
-          
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+                }}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Que desea hacer?</Text>
+                        <View style={{flexDirection:"row",alignItems:"stretch", margin:20}}>
+                            <TouchableOpacity
+                                style={[styles.button,{marginRight:20, backgroundColor:"#05AB48", paddingHorizontal:30}]}
+                                onPress={() => {
+                                    setModalVisible(!modalVisible);
+                                    navigation.navigate('NewMaterial',{materialR:materialAux,fnRefresh:refreshList});
+                                }}>
+                                <Text style={styles.textStyle}>Editar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.button,styles.buttonClose,]}
+                                onPress={() => {
+                                    setModalVisible(!modalVisible);
+                                    deleteMaterial(materialAux._id);
+                                    refreshList();
+                                }}>
+                                <Text style={styles.textStyle}>Elimiminar</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity
+                                style={[styles.button,{backgroundColor:"#48A1D4"}]}
+                                onPress={() => {setModalVisible(!modalVisible);refreshList();}}>
+                                <Text style={styles.textStyle}>Cancelar</Text>
+                            </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 }
