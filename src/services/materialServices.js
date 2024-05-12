@@ -29,7 +29,20 @@ export const allMaterials=async()=>{
         return null;
     }
 }
-
+export const dataMaterialDro=async()=>{
+    try {
+        let data =[];
+        const response = await allMaterials();
+        for(let i=0;i < response.Material.length;i++){
+            let valor = { label: response.Material[i].nombreMaterial, value: response.Material[i]._id }
+            data.push(valor);
+        }
+        return data;
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        return null;
+    }
+}
 export const updateMaterial=(material)=>{
     axios.put(`${BASE_URL}/Materiales/UpdateMaterial`,{
         material_ID:material.material_ID,

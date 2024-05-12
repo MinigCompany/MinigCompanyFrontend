@@ -34,14 +34,16 @@ const Uniforms = () =>{
                             <Icon name="search" size={25} color="#282928" />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.VistaNewmaterial}>
-                        <View style={styles.contenedorTexto}>
-                            <Text style={styles.txtNewMaterial}>Salida</Text>
-                        </View>
-                        <View style={styles.contenedorImagen}>
-                            <Image style={styles.image} source={require('../../assets/category.png')} />
-                        </View>
-                    </TouchableOpacity>
+                    <View style={styles.VistaCodigo}>
+                        <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50}]} onPress={() => navigation.navigate('NewMaterialSalida')}>
+                            <View style={styles.contenedorTextoSalida}>
+                                <Text style={styles.txtNewMaterial}>Salidas</Text>
+                            </View>
+                            <View style={[styles.contenedorImagen,{marginLeft:20}]}>
+                                <Image style={styles.image} source={require('../../assets/category.png')} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                     <Text style={styles.txtFiltro}>Filtros</Text>
                     <View style={styles.VistaInventario}>
                         <Dropdown

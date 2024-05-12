@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     },
     VistaNewmaterial:{
         flexDirection: 'row',
-        marginRight:150,
         justifyContent: 'left',
         backgroundColor:"#FFAE51",
         borderWidth: 1,
@@ -52,7 +51,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
     contenedorTexto: {
-        flex: 1,
+        /*flex: 1,
+        flexDirection:"row",
+        marginHorizontal:50*/
+        paddingHorizontal:5
     },
     image: {
         width: 20,
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 8,
-        width:150,
+        width:200,
         marginLeft:10
       },
       placeholderStyle: {

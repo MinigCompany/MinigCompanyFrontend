@@ -39,7 +39,7 @@ const Inventory = ({route}) => {
         } catch (error) {
             console.error('Error al obtener:', error);
         }     
-      }
+    }
     const refreshList=()=>{
         setTime(new Date().getTime());
     }
@@ -88,7 +88,7 @@ const Inventory = ({route}) => {
                         materialAux = material;
                         //console.log(materialAux);
                     }}
-                    style={styles.colorBtn}>
+                    style={[styles.colorBtn,{backgroundColor:"#FFFFFF",borderRadius:5,borderWidth:1,padding:2}]}>
                         <Icon name="edit" type="antdesign" size={25} color="#FF8400"/>
                     </TouchableOpacity> 
                 </View>
@@ -106,37 +106,19 @@ const Inventory = ({route}) => {
                             <Icon name="search" size={25} color="#282928" />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.VistaNewmaterial} onPress={() => navigation.navigate('NewMaterial',{fnRefresh:refreshList})}>
-                        <View style={styles.contenedorTexto}>
-                            <Text style={styles.txtNewMaterial}>Nuevo Material</Text>
-                        </View>
-                        <View style={styles.contenedorImagen}>
-                            <Image style={styles.image} source={require('../../assets/category.png')} />
-                        </View>
-                    </TouchableOpacity>
+                    <View style={styles.VistaCodigo}>
+                        <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50}]} onPress={() => navigation.navigate('NewMaterial',{fnRefresh:refreshList})}>
+                            <View style={styles.contenedorTexto}>
+                                <Text style={styles.txtNewMaterial}>Nuevo Material</Text>
+                            </View>
+                            <View style={styles.contenedorImagen}>
+                                <Image style={styles.image} source={require('../../assets/category.png')} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    
                     <Text style={styles.txtFiltro}>Filtros</Text>
                     <View style={styles.VistaInventario}>
-                        <Dropdown
-                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
-                        data={data}
-                        search
-                        maxHeight={300}
-                        labelField="label"
-                        valueField="value"
-                        placeholder={!isFocus ? 'Material' : '...'}
-                        searchPlaceholder="Search..."
-                        value={value}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                        onChange={item => {
-                            setValue(item.value);
-                            setIsFocus(false);
-                        }}
-                        />
                         <Dropdown
                         style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
                         placeholderStyle={styles.placeholderStyle}

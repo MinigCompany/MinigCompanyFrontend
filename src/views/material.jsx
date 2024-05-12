@@ -1,10 +1,12 @@
-import react,  {useContext, useState,useEffect} from "react";
+import react,  {useContext, useState,useEffect,useCallback} from "react";
 import { Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useFocusEffect } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icons from 'react-native-vector-icons/Fontisto';
+import { Dropdown } from 'react-native-element-dropdown';
 import styles from '../styles/stylesFormularios';
 import {saveMaterial,updateMaterial} from "../services/materialServices";
+import {dataCategoriesDro} from "../services/categoryServices";
 let esNuevo=true;
 const Material = ({route}) => {
   let nombreR;
@@ -20,14 +22,26 @@ const Material = ({route}) => {
     detalleR=route.params.materialR.detalle;
     categoriaR=route.params.materialR.categoria;
   }
-
+  const fetchCategorias = async () => {
+    const data = await dataCategoriesDro();
+    if(data){
+      setAllCategorias(data);
+    }
+  };
   const navigation = useNavigation();
   const [cantidad, setCantidad] = useState(cantidadR==null?null:cantidadR+"");
   const [Nombres, setNombres] = useState(nombreR);
   const [precio, setPrecio] = useState(precioR);
   const [detalle, setDetalle] = useState(detalleR);
   const [categoria, setCategoria] = useState(categoriaR);
-
+  const [isFocus, setIsFocus] = useState(false);
+  const [allCategorias, setAllCategorias] = useState([]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchCategorias()
+    }, [])
+  
+  );
 //almacenar fecha
   const [textFechaIn, setTextIn] = useState(new Date);
   //Seleccionar Fecha
@@ -39,7 +53,7 @@ const Material = ({route}) => {
         setDatePickerVisibility(false);
       };
       const handleConfirm = (date) => {
-        console.warn(date);
+        //console.warn(date);
         setTextIn(date);
         hideDatePicker();
       };
@@ -117,11 +131,27 @@ const Material = ({route}) => {
                 placeholder="Detalle"
                 onChangeText={text => setDetalle(text)}
                 />
-        <TextInput style={styles.txtInput} 
-                value={categoria}
-                placeholder="Categoria"
-                onChangeText={text => setCategoria(text)}
-                />
+        <Dropdown
+          style={[styles.dropdown,{backgroundColor:"#FFFFFF",borderBottomWidth: 1,marginTop:10}, isFocus && { borderColor: 'blue' }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={allCategorias}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={!isFocus ? 'Categoria' : '...'}
+          searchPlaceholder="Search..."
+          value={categoria}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={item => {
+            setCategoria(item.value);
+              setIsFocus(false);
+          }}
+        />
         <View  style={[styles.VistaBtnSeguidos,{marginTop:30}]}>
           <TouchableOpacity onPress={() => {navigation.navigate('Inventario');esNuevo=true;route.params.fnRefresh();}}
               style={styles.BotonCancelar}>
