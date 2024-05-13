@@ -1,30 +1,60 @@
-import react,  {useContext, useState,useEffect} from "react";
-import { Text, View, TextInput, TouchableOpacity, Image, Modal } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import react,  {useContext, useState,useEffect, useCallback} from "react";
+import { Text, View, TextInput, TouchableOpacity, Image, Modal, Alert } from 'react-native';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Icons from 'react-native-vector-icons/FontAwesome';
+import {Icon} from 'react-native-vector-icons/FontAwesome';
 import styles from '../styles/stylesFormularios';
 import { Dropdown } from 'react-native-element-dropdown';
+import {dataMaterialDro} from "../services/materialServices";
+import {saveSalida} from "../services/InputServices";
+let esNuevo=true;
 const SalidaMaterial = () => {
-    const navigation = useNavigation();
-    const [Telefono, setTelefono] = useState(null);
-    const [Nombres, setNombres] = useState(null);
-  const [Apellidos, setApellidos] = useState(null);
-  const [Email, setEmail] = useState(null);
-  const [passwordConfir, setpasswordConfir] = useState(null);
-  const [password, setpassword] = useState(null);
-//almacenar fecha
+  const navigation = useNavigation();
+  const [cantidad, setCantidad] = useState(null);
+  const [nombres, setNombres] = useState(null);
+  const [observacion, setObservacion] = useState(null);
+  const [materials, setMaterials] = useState([]);
+  //variables de estado para el Dropdown
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
+  //almacenar fecha
   const [textFechaIn, setTextIn] = useState(new Date);
   //Seleccionar Fecha
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  //ComboBox
-  const data = [
-    { label: 'Item 1', value: '1' },
-    { label: 'Item 2', value: '2' },
-    { label: 'Item 3', value: '3' },
-];
-const [value, setValue] = useState(null);
-const [isFocus, setIsFocus] = useState(false);
+    useFocusEffect(
+      useCallback(() => {
+          fetchMaterial();
+      }, [])
+  );
+  const fetchMaterial = async () => {
+    const data = await dataMaterialDro();
+    if(data){
+        setMaterials(data);
+    }
+  };
+  let validar=()=>{
+    if(esNuevo){
+      if(value!= null){
+        if(cantidad==null || nombres==null || observacion==null || textFechaIn== null){
+          Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
+          return;
+        }else{
+          let salida = {
+            idmaterial:value,
+            nombreTrabajador:nombres,
+            cantidad:parseInt(cantidad),
+            observacion:observacion,
+            fecha:textFechaIn
+          }
+          saveSalida(salida);
+          navigation.navigate('Inventario');
+        }
+      }else{
+        Alert.alert("Info.","Debe de elegir al menos un material");
+      }
+    }
+  }
+
   const showDatePicker = () => {
         setDatePickerVisibility(true);
       };
@@ -48,7 +78,7 @@ const [isFocus, setIsFocus] = useState(false);
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
-            data={data}
+            data={materials}
             search
             maxHeight={300}
             labelField="label"
@@ -67,7 +97,7 @@ const [isFocus, setIsFocus] = useState(false);
         <Text style={styles.textoSecundario} >Detalles de la salida</Text>
         <TouchableOpacity style={styles.txtInputFecha} title="Fecha Ingreso" onPress={showDatePicker}>
                 <View style={styles.VistaBtnSeguidos}>
-                <Icons  name='home' style={styles.circleIcon}/>
+                <Icon  name='home' style={styles.circleIcon}/>
               <Text style={styles.textFecha}>Fecha: {valor1} </Text>
                 </View>
         </TouchableOpacity> 
@@ -78,25 +108,20 @@ const [isFocus, setIsFocus] = useState(false);
               onCancel={hideDatePicker}
             />
         <TextInput style={styles.txtInput} 
-                value={Nombres}
+                value={nombres}
                 placeholder="Nombre del trabajador"
                 onChangeText={text => setNombres(text)}
                 />
         <TextInput style={styles.txtInput} 
-                value={Telefono}
+                value={cantidad}
                 placeholder="Cantidad"
                 keyboardType='number-pad'
-                onChangeText={text => setTelefono(text)}
+                onChangeText={text => setCantidad(text)}
                 />
         <TextInput style={styles.txtInput} 
-                value={Email}
+                value={observacion}
                 placeholder="Observación"
-                onChangeText={text => setEmail(text)}
-                />
-        <TextInput style={styles.txtInput} 
-                value={Email}
-                placeholder="Detalle"
-                onChangeText={text => setEmail(text)}
+                onChangeText={text => setObservacion(text)}
                 />
         <View  style={[styles.VistaBtnSeguidos,{marginTop:30}]}>
           <TouchableOpacity onPress={() => navigation.navigate('Registros')}
@@ -104,7 +129,7 @@ const [isFocus, setIsFocus] = useState(false);
               <Text style={[styles.colorTxtBtn,{color:"#000000"}]}>Cancelar</Text>
           </TouchableOpacity> 
           <TouchableOpacity
-              style={styles.BotonGuardar}>
+              style={styles.BotonGuardar} onPress={validar}>
               <Text style={styles.colorTxtBtn}>Guardar</Text>
           </TouchableOpacity>
         </View>     

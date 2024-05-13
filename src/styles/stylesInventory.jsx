@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 8,
-        width:200,
+        width:160,
         marginLeft:10
       },
       placeholderStyle: {

@@ -1,5 +1,6 @@
 import axios from "axios";
 import{BASE_URL} from "../config";
+import { Alert } from "react-native";
 
 export const allInputs=async(id)=>{
     try {
@@ -47,11 +48,31 @@ export const dataInputDro=async(id)=>{
         const response = await axios.post(`${BASE_URL}/Materiales/AllSalidas/`+id,{
             entrada_ID
         });
-        console.log('Datos recibidos de salidas:', response.data);
+        //console.log('Datos recibidos de salidas:', response.data);
         return response.data; // Retornamos los datos directamente
     } catch (error) {
         console.error('Error al realizar la solicitud de salidas:', error);
-        // Podrías retornar un valor especial como null o undefined para indicar que la solicitud falló
         return null;
     }
+}
+export const saveSalida=(salida)=>{
+    axios.post(`${BASE_URL}/Materiales/AddSalida`,{
+        material_ID:salida.idmaterial,
+        salida:{
+            fecha:salida.fecha,
+            nombreTrabajador:salida.nombreTrabajador,
+            cantidad:salida.cantidad,
+            observacion:salida.observacion
+        }
+    }).then(res => {
+        if (res){
+            console.log("Salida registrada: "+salida)
+        }
+    }).catch(e => {
+        console.log(`Error registro de la salida ${e}`);
+        console.log(e.response.data);
+        if(e.response.data&&e.response.data.status==false){
+            Alert.alert("Info.","No existe esa disponibidad de material para su salida, porfavor actualice el inventario y vuelva a intentarlo");
+        }
+    });
 }

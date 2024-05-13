@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 //import Icon from 'react-native-vector-icons/FontAwesome';
-import { Icon } from '@rneui/themed'
+import { Icon } from 'react-native-elements'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { navigationRef } from './RootNavigation';
