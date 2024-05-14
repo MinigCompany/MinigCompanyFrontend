@@ -2,7 +2,7 @@ import react,  {useContext, useState,useEffect, useCallback} from "react";
 import { Text, View, TextInput, TouchableOpacity, Image, Modal, Alert } from 'react-native';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {Icon} from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
 import { Dropdown } from 'react-native-element-dropdown';
 import {dataMaterialDro} from "../services/materialServices";
@@ -97,7 +97,7 @@ const SalidaMaterial = () => {
         <Text style={styles.textoSecundario} >Detalles de la salida</Text>
         <TouchableOpacity style={styles.txtInputFecha} title="Fecha Ingreso" onPress={showDatePicker}>
                 <View style={styles.VistaBtnSeguidos}>
-                <Icon  name='home' style={styles.circleIcon}/>
+                <Icon  name='date' style={styles.circleIcon}/>
               <Text style={styles.textFecha}>Fecha: {valor1} </Text>
                 </View>
         </TouchableOpacity> 

@@ -102,9 +102,7 @@ const Inventory = ({route}) => {
                 <Text style={styles.txtBien}>Bienvenida a Mining Company</Text>
                 <View style={styles.VistaInventario}>
                         <Text style={styles.txtInventario}>Inventario</Text>
-                        <TouchableOpacity style={styles.btnInventario}>
-                            <Icon name="search" size={25} color="#282928" />
-                        </TouchableOpacity>
+                        
                     </View>
                     <View style={styles.VistaCodigo}>
                         <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50}]} onPress={() => navigation.navigate('NewMaterial',{fnRefresh:refreshList})}>
