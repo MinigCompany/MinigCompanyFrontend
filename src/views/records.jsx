@@ -131,7 +131,7 @@ const Records = () =>{
                         labelField="label"
                         valueField="value"
                         placeholder={!isFocus ? 'Materiales' : '...'}
-                        searchPlaceholder="Search..."
+                        searchPlaceholder="Buscar..."
                         value={value}
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
@@ -155,7 +155,7 @@ const Records = () =>{
                         labelField="label"
                         valueField="value"
                         placeholder={!isFocusEnt ? 'Entrada (fecha)' : '...'}
-                        searchPlaceholder="Search..."
+                        searchPlaceholder="Buscar..."
                         value={valueEnt}
                         onFocus={() => setIsFocusEnt(true)}
                         onBlur={() => setIsFocusEnt(false)}

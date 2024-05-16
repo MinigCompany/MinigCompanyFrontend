@@ -39,7 +39,7 @@ export const dataInputDro=async(id)=>{
         "enero", "febrero", "marzo", "abril", "mayo", "junio",
         "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
     ];
-    const formattedDate = `${day} de ${monthNames[monthIndex]} del ${year}`;
+    const formattedDate = `${day}-${monthIndex}-${year}`;
     return formattedDate;
  }
 

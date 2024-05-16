@@ -43,6 +43,17 @@ export const dataMaterialDro=async()=>{
         return null;
     }
 }
+export const allMaterialsCategoria=async(cadena)=>{
+    try {
+        const response = await axios.get(`${BASE_URL}/Materiales/MaterialCategoria/`+cadena);
+        //console.log('Hola Datos recibidos:', response.data);
+        return response.data; // Retornamos los datos directamente
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        // Podrías retornar un valor especial como null o undefined para indicar que la solicitud falló
+        return null;
+    }
+}
 export const updateMaterial=(material)=>{
     axios.put(`${BASE_URL}/Materiales/UpdateMaterial`,{
         material_ID:material.material_ID,

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 10,
         marginBottom: 10,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
     txtInventario:{
         color: '#000000',

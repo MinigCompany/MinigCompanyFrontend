@@ -4,8 +4,9 @@ import { Text, View, TouchableOpacity, Image, Modal,FlatList } from 'react-nativ
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import styles from '../styles/stylesInventory';
 import { Dropdown } from 'react-native-element-dropdown';
-import {allMaterials,deleteMaterial} from "../services/materialServices";
-import { Icon } from 'react-native-elements'
+import {allMaterials,deleteMaterial,allMaterialsCategoria} from "../services/materialServices";
+import { Icon } from 'react-native-elements';
+import {dataCategoriesDro} from "../services/categoryServices";
 let materialAux=null;
 const Inventory = ({route}) => {
     const navigation = useNavigation();
@@ -14,19 +15,37 @@ const Inventory = ({route}) => {
     const [nombreUser, setNombreUser] = useState();
     const [ApellidoUser, setApellidoUser] = useState();
     const [modalVisible, setModalVisible] = useState(false);
+    const [allCategorias, setAllCategorias] = useState([]);
+    //
+    const [value, setValue] = useState(null);
+    const [isFocus, setIsFocus] = useState(false);
+    
     useFocusEffect(
         useCallback(() => {
             fetchMaterials();
+            fetchCategorias();
             getUser();
         }, [])
     );
-    
+    const fetchCategorias = async () => {
+        const data = await dataCategoriesDro();
+        if(data){
+          setAllCategorias(data);
+        }
+      };
     const fetchMaterials = async () => {
         const data = await allMaterials();
         if (data) {
           setMaterials(data.Material);
         }
     };
+    const fetchMaterialCategory = async (categoria) => {
+        setMaterials([]);
+        const data = await allMaterialsCategoria(categoria);
+        if(data){
+            setMaterials(data.Material);
+        }
+      };
     const getUser = async () =>{   
         try {
           const userData = await AsyncStorage.getItem('userData');
@@ -43,14 +62,6 @@ const Inventory = ({route}) => {
     const refreshList=()=>{
         setTime(new Date().getTime());
     }
-    const data = [
-        { label: 'Item 1', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-      ];
-      const [value, setValue] = useState(null);
-      const [isFocus, setIsFocus] = useState(false);
-  
       const renderLabel = () => {
         if (value || isFocus) {
           return (
@@ -61,9 +72,11 @@ const Inventory = ({route}) => {
         }
         return null;
       };
+    
     const ItemMaterials=({material})=>{
+        const borderColor = material.saldo < 5 ? 'red' : 'green';
         return (
-            <View  style={styles.VistaMateriales}>
+            <View  style={[styles.VistaMateriales,{borderColor}]}>
                 <View style={[styles.Separador,{flex: 1 }]}>
                     <Text style={styles.txtFiltro}>$ {material.precio.$numberDecimal}</Text> 
                     <Icon name="paperclip"  type="antdesign" size={25} color="#FF8400" />
@@ -76,9 +89,9 @@ const Inventory = ({route}) => {
                             <Text style={styles.subtitulo}>Codigo: </Text>
                             <Text style={styles.subtitulo}>{material._id.substring(0, 5)}</Text>
                         </View>
-                        <View style={styles.VistaCodigo}>
+                        <View style={[styles.VistaCodigo,{marginHorizontal:20}]}>
                             <Text style={styles.subtitulo}>Cant.</Text>
-                            <Text style={styles.subtitulo}>{material.cantidad}</Text>
+                            <Text style={styles.subtitulo}>{material.saldo}</Text>
                         </View>
                     </View>                    
                 </View >
@@ -123,19 +136,20 @@ const Inventory = ({route}) => {
                         selectedTextStyle={styles.selectedTextStyle}
                         inputSearchStyle={styles.inputSearchStyle}
                         iconStyle={styles.iconStyle}
-                        data={data}
+                        data={allCategorias}
                         search
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
                         placeholder={!isFocus ? 'Categoria' : '...'}
-                        searchPlaceholder="Search..."
+                        searchPlaceholder="Buscar..."
                         value={value}
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
                         onChange={item => {
                             setValue(item.value);
                             setIsFocus(false);
+                            fetchMaterialCategory(item.value);                            
                         }}
                         />
                     </View>
@@ -179,7 +193,7 @@ const Inventory = ({route}) => {
                                     deleteMaterial(materialAux._id);
                                     refreshList();
                                 }}>
-                                <Text style={styles.textStyle}>Elimiminar</Text>
+                                <Text style={styles.textStyle}>Eliminar</Text>
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity
