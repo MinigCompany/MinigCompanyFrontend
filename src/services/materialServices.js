@@ -6,6 +6,7 @@ export const saveMaterial=(material)=>{
         nombreMaterial:material.nombreMaterial,
         precio:material.precio,
         cantidad:material.cantidad,
+        udm:material.udm,
         detalle:material.detalle,
         categoria:material.categoria,
         fecha:material.fecha
@@ -60,6 +61,7 @@ export const updateMaterial=(material)=>{
         nombreMaterial:material.nombreMaterial,
         precio:material.precio,
         cantidad:material.cantidad,
+        udm:material.udm,
         detalle:material.detalle,
         categoria:material.categoria,
         fecha:material.fecha

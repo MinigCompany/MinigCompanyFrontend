@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         justifyContent: 'left',
     },
     Separador:{
-        marginLeft:10
+      marginLeft:10
     },
     subtitulo:{
     },

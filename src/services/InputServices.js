@@ -62,6 +62,7 @@ export const saveSalida=(salida)=>{
             fecha:salida.fecha,
             nombreTrabajador:salida.nombreTrabajador,
             cantidad:salida.cantidad,
+            udm:salida.udm,
             observacion:salida.observacion
         }
     }).then(res => {

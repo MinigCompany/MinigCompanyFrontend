@@ -71,19 +71,19 @@ const Records = () =>{
     };
     const ItemSalidas=({salida})=>{
         return(
-            <View  style={styles.VistaMateriales}>
-                <View style={styles.Separador}>
+            <View  style={[styles.VistaMateriales,{flex:1,alignItems:"center"}]}>
+                <View style={[styles.Separador,{flex:1}]}>
                     <Image style={styles.imageOutPut} source={require('../../assets/output.png')} />
                 </View>
-                <View style={styles.Separador}>
+                <View style={[styles.Separador,{flex:1,alignItems:"center"}]}>
                     <Image style={{width: 5,height: 80,}} source={require('../../assets/Line.png')} />
                 </View>
-                <View style={styles.Separador}>
+                <View style={[styles.Separador,{flex:5}]}>
                     <Text style={styles.tituloMaterial}>SALIDA DE MATERIALES</Text>
                     <Text style={styles.subtitulo}>{salida.observacion} </Text>
                     <View style={styles.VistaCodigo}>
                         <View style={styles.VistaCodigo}>
-                            <Text style={styles.subtitulo}>Cantidad de materiales: </Text>
+                            <Text style={styles.subtitulo}>Cantidad de material: </Text>
                             <Text style={styles.subtitulo}>{salida.cantidad} unidades</Text>
                         </View>
                     </View>
@@ -93,7 +93,6 @@ const Records = () =>{
                             <Text style={styles.subtitulo}>{salida.nombreTrabajador}</Text>
                         </View>
                     </View>
-                    
                 </View >
             </View>
         );

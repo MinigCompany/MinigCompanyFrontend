@@ -7,6 +7,7 @@ import styles from '../styles/stylesFormularios';
 import { Dropdown } from 'react-native-element-dropdown';
 import {dataMaterialDro} from "../services/materialServices";
 import {saveSalida} from "../services/InputServices";
+import {dataUDMDro} from "../services/udmServices";
 let esNuevo=true;
 const SalidaMaterial = () => {
   const navigation = useNavigation();
@@ -14,6 +15,9 @@ const SalidaMaterial = () => {
   const [nombres, setNombres] = useState(null);
   const [observacion, setObservacion] = useState(null);
   const [materials, setMaterials] = useState([]);
+  const [udm, setUdm] = useState(null);
+  const [allUdm, setAllUdm] = useState([]);
+  const [isFocusUdm, setIsFocusUdm] = useState(false);
   //variables de estado para el Dropdown
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
@@ -24,6 +28,7 @@ const SalidaMaterial = () => {
     useFocusEffect(
       useCallback(() => {
           fetchMaterial();
+          fetchUDM();
       }, [])
   );
   const fetchMaterial = async () => {
@@ -32,10 +37,16 @@ const SalidaMaterial = () => {
         setMaterials(data);
     }
   };
+  const fetchUDM = async () => {
+    const data = await dataUDMDro();
+    if(data){
+      setAllUdm(data);
+    }
+  };
   let validar=()=>{
     if(esNuevo){
       if(value!= null){
-        if(cantidad==null || nombres==null || observacion==null || textFechaIn== null){
+        if(cantidad==null || nombres==null || observacion==null || textFechaIn== null || udm==null){
           Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
           return;
         }else{
@@ -43,6 +54,7 @@ const SalidaMaterial = () => {
             idmaterial:value,
             nombreTrabajador:nombres,
             cantidad:parseInt(cantidad),
+            udm:udm,
             observacion:observacion,
             fecha:textFechaIn
           }
@@ -73,7 +85,7 @@ const SalidaMaterial = () => {
         <Text style={styles.textoSecundario}>Ingrese los datos para la salida del material a los trabajadores</Text>
         <View >
             <Dropdown
-            style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+            style={[styles.dropdown,{marginTop:10}, isFocus && { borderColor: 'blue'}]}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
@@ -118,6 +130,27 @@ const SalidaMaterial = () => {
                 keyboardType='number-pad'
                 onChangeText={text => setCantidad(text)}
                 />
+        <Dropdown
+          style={[styles.dropdown,{backgroundColor:"#FFFFFF",borderBottomWidth: 1,marginTop:10}, isFocusUdm && { borderColor: 'blue' }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={allUdm}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={!isFocusUdm ? 'Unidad de Medida' : '...'}
+          searchPlaceholder="Buscar..."
+          value={udm}
+          onFocus={() => setIsFocusUdm(true)}
+          onBlur={() => setIsFocusUdm(false)}
+          onChange={item => {
+            setUdm(item.value);
+              setIsFocusUdm(false);
+          }}
+        />
         <TextInput style={styles.txtInput} 
                 value={observacion}
                 placeholder="Observación"

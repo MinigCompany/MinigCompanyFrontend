@@ -7,6 +7,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import styles from '../styles/stylesFormularios';
 import {saveMaterial,updateMaterial} from "../services/materialServices";
 import {dataCategoriesDro} from "../services/categoryServices";
+import {dataUDMDro} from "../services/udmServices";
 let esNuevo=true;
 const Material = ({route}) => {
   let nombreR;
@@ -14,6 +15,7 @@ const Material = ({route}) => {
   let precioR;
   let detalleR;
   let categoriaR;
+  let udmR;
   if(route.params.materialR!=null){
     esNuevo=false;
     nombreR=route.params.materialR.nombreMaterial;
@@ -21,11 +23,18 @@ const Material = ({route}) => {
     precioR=route.params.materialR.precio.$numberDecimal;
     detalleR=route.params.materialR.detalle;
     categoriaR=route.params.materialR.categoria;
+    udmR=route.params.materialR.udm;
   }
   const fetchCategorias = async () => {
     const data = await dataCategoriesDro();
     if(data){
       setAllCategorias(data);
+    }
+  };
+  const fetchUDM = async () => {
+    const data = await dataUDMDro();
+    if(data){
+      setAllUdm(data);
     }
   };
   const navigation = useNavigation();
@@ -34,11 +43,15 @@ const Material = ({route}) => {
   const [precio, setPrecio] = useState(precioR);
   const [detalle, setDetalle] = useState(detalleR);
   const [categoria, setCategoria] = useState(categoriaR);
+  const [udm, setUdm] = useState(udmR);
   const [isFocus, setIsFocus] = useState(false);
+  const [isFocusUdm, setIsFocusUdm] = useState(false);
   const [allCategorias, setAllCategorias] = useState([]);
+  const [allUdm, setAllUdm] = useState([]);
   useFocusEffect(
     useCallback(() => {
-      fetchCategorias()
+      fetchCategorias();
+      fetchUDM();
     }, [])
   
   );
@@ -61,7 +74,7 @@ const Material = ({route}) => {
   
   let validar=()=>{
     if(esNuevo){
-      if(cantidad==null || Nombres==null || precio==null || detalle==null || categoria==null || textFechaIn== null){
+      if(cantidad==null || Nombres==null || precio==null || detalle==null || categoria==null || textFechaIn== null || udm==null){
         Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
         return;
       }else{
@@ -69,6 +82,7 @@ const Material = ({route}) => {
           nombreMaterial:Nombres,
           precio:parseFloat(precio),
           cantidad:parseInt(cantidad),
+          udm:udm,
           detalle:detalle,
           categoria:categoria,
           fecha:textFechaIn
@@ -83,6 +97,7 @@ const Material = ({route}) => {
         nombreMaterial:Nombres,
         precio:parseFloat(precio),
         cantidad:parseInt(cantidad),
+        udm:udm,
         detalle:detalle,
         categoria:categoria,
         fecha:textFechaIn
@@ -126,6 +141,27 @@ const Material = ({route}) => {
                 keyboardType='number-pad'
                 onChangeText={text => setCantidad(text)}
                 />
+        <Dropdown
+          style={[styles.dropdown,{backgroundColor:"#FFFFFF",borderBottomWidth: 1,marginTop:10}, isFocusUdm && { borderColor: 'blue' }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={allUdm}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={!isFocusUdm ? 'Unidad de Medida' : '...'}
+          searchPlaceholder="Buscar..."
+          value={udm}
+          onFocus={() => setIsFocusUdm(true)}
+          onBlur={() => setIsFocusUdm(false)}
+          onChange={item => {
+            setUdm(item.value);
+              setIsFocusUdm(false);
+          }}
+        />
         <TextInput style={styles.txtInput} 
                 value={detalle}
                 placeholder="Detalle"
@@ -143,7 +179,7 @@ const Material = ({route}) => {
           labelField="label"
           valueField="value"
           placeholder={!isFocus ? 'Categoria' : '...'}
-          searchPlaceholder="Search..."
+          searchPlaceholder="Buscar..."
           value={categoria}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
