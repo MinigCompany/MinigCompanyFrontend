@@ -77,3 +77,26 @@ export const saveSalida=(salida)=>{
         }
     });
 }
+
+export const saveSalidaUniform=(salida)=>{
+    axios.post(`${BASE_URL}/Uniformes/AddSalida`,{
+        uniforme_ID:salida.idUniform,
+        salida:{
+            fecha:salida.fecha,
+            nombreTrabajador:salida.nombreTrabajador,
+            cantidad:salida.cantidad,
+            udm:salida.udm,
+            observacion:salida.observacion
+        }
+    }).then(res => {
+        if (res){
+            console.log("Salida registrada: "+salida)
+        }
+    }).catch(e => {
+        console.log(`Error registro de la salida ${e}`);
+        console.log(e.response.data);
+        if(e.response.data&&e.response.data.status==false){
+            Alert.alert("Info.","No existe esa disponibidad de uniforme para su salida, porfavor actualice el inventario y vuelva a intentarlo");
+        }
+    });
+}

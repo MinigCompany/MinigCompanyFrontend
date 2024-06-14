@@ -13,6 +13,8 @@ import UniformsScreen from "./src/views/uniforms";
 import MaterialScreen from "./src/views/material";
 import MaterialSalidaScreen from "./src/views/salidaMaterial";
 import MaterialEntradaScreen from "./src/views/entradaMaterial";
+import UniformRegisterScreen from "./src/views/uniformeRegister";
+import UniformSalidaScreen from "./src/views/salidaUniform";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Navigation = () => {
@@ -34,6 +36,9 @@ const Navigation = () => {
         <Stack.Screen name="NewMaterial" component={MaterialScreen} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterialSalida" component={MaterialSalidaScreen} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterialEntrada" component={MaterialEntradaScreen} options={{headerShown:false}}/>
+
+        <Stack.Screen name="NewUniform" component={UniformRegisterScreen} options={{headerShown:false}}/>
+        <Stack.Screen name="NewUniformSalida" component={UniformSalidaScreen} options={{headerShown:false}}/>
       </Stack.Navigator>
       
     </NavigationContainer>

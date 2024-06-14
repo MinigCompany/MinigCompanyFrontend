@@ -5,8 +5,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
 import { Dropdown } from 'react-native-element-dropdown';
-import {dataMaterialDro} from "../services/materialServices";
-import {saveSalida} from "../services/InputServices";
+import {dataUniformDro} from "../services/uniformServices";
+import {saveSalidaUniform} from "../services/InputServices";
 import {dataUDMDro} from "../services/udmServices";
 let esNuevo=true;
 const SalidaMaterial = ({route}) => {
@@ -14,11 +14,10 @@ const SalidaMaterial = ({route}) => {
   const [cantidad, setCantidad] = useState(null);
   const [nombres, setNombres] = useState(null);
   const [observacion, setObservacion] = useState(null);
-  const [materials, setMaterials] = useState([]);
+  const [uniforms, setUniforms] = useState([]);
   const [udm, setUdm] = useState(null);
   const [allUdm, setAllUdm] = useState([]);
   const [isFocusUdm, setIsFocusUdm] = useState(false);
-
   const [modalVisible, setModalVisible] = useState(false);
   const [textoModal, setTextoModal] = useState("");
   const [tituloModal, setTituloModal] = useState("");
@@ -31,14 +30,14 @@ const SalidaMaterial = ({route}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     useFocusEffect(
       useCallback(() => {
-          fetchMaterial();
+          fetchUniforms();
           fetchUDM();
       }, [])
   );
-  const fetchMaterial = async () => {
-    const data = await dataMaterialDro();
+  const fetchUniforms = async () => {
+    const data = await dataUniformDro();
     if(data){
-        setMaterials(data);
+        setUniforms(data);
     }
   };
   const fetchUDM = async () => {
@@ -55,17 +54,18 @@ const SalidaMaterial = ({route}) => {
           return;
         }else{
           let salida = {
-            idmaterial:value,
+            idUniform:value,
             nombreTrabajador:nombres,
             cantidad:parseInt(cantidad),
             udm:udm,
             observacion:observacion,
             fecha:textFechaIn
           }
-          saveSalida(salida);
-          setTituloModal("Salida de material");
-          setTextoModal("El registro de salida de material ha sido guardado correctamente")
+          saveSalidaUniform(salida);
+          setTituloModal("Salida de uniforme");
+          setTextoModal("El registro de salida de uniformes ha sido guardado correctamente")
           setModalVisible(true);
+          
         }
       }else{
         Alert.alert("Info.","Debe de elegir al menos un material");
@@ -87,8 +87,8 @@ const SalidaMaterial = ({route}) => {
       const valor1 = textFechaIn.toLocaleDateString();
   return(
     <View style={styles.container}>
-        <Text style={styles.textoBien} >Registrar Salida de Material</Text>
-        <Text style={styles.textoSecundario}>Ingrese los datos para la salida del material a los trabajadores</Text>
+        <Text style={styles.textoBien} >Registrar Salida de Uniformes</Text>
+        <Text style={styles.textoSecundario}>Ingrese los datos para la salida del uniforme a los trabajadores</Text>
         <View >
             <Dropdown
             style={[styles.dropdown,{marginTop:10}, isFocus && { borderColor: 'blue'}]}
@@ -96,12 +96,12 @@ const SalidaMaterial = ({route}) => {
             selectedTextStyle={styles.selectedTextStyle}
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
-            data={materials}
+            data={uniforms}
             search
             maxHeight={300}
             labelField="label"
             valueField="value"
-            placeholder={!isFocus ? 'Seleccionar Material' : '...'}
+            placeholder={!isFocus ? 'Seleccionar Uniforme' : '...'}
             searchPlaceholder="Buscar..."
             value={value}
             onFocus={() => setIsFocus(true)}
@@ -114,10 +114,10 @@ const SalidaMaterial = ({route}) => {
         </View>
         <Text style={styles.textoSecundario} >Detalles de la salida</Text>
         <TouchableOpacity style={styles.txtInputFecha} title="Fecha Ingreso" onPress={showDatePicker}>
-                <View style={styles.VistaBtnSeguidos}>
-                <Icon  name='date' style={styles.circleIcon}/>
-              <Text style={styles.textFecha}>Fecha: {valor1} </Text>
-                </View>
+          <View style={styles.VistaBtnSeguidos}>
+            <Icon  name='date' style={styles.circleIcon}/>
+            <Text style={styles.textFecha}>Fecha: {valor1} </Text>
+          </View>
         </TouchableOpacity> 
         <DateTimePickerModal
               isVisible={isDatePickerVisible}
@@ -129,12 +129,6 @@ const SalidaMaterial = ({route}) => {
                 value={nombres}
                 placeholder="Nombre del trabajador"
                 onChangeText={text => setNombres(text)}
-                />
-        <TextInput style={styles.txtInput} 
-                value={cantidad}
-                placeholder="Cantidad"
-                keyboardType='number-pad'
-                onChangeText={text => setCantidad(text)}
                 />
         <Dropdown
           style={[styles.dropdown,{backgroundColor:"#FFFFFF",borderBottomWidth: 1,marginTop:10}, isFocusUdm && { borderColor: 'blue' }]}
@@ -158,12 +152,18 @@ const SalidaMaterial = ({route}) => {
           }}
         />
         <TextInput style={styles.txtInput} 
+                value={cantidad}
+                placeholder="Cantidad"
+                keyboardType='number-pad'
+                onChangeText={text => setCantidad(text)}
+                />
+        <TextInput style={styles.txtInput} 
                 value={observacion}
                 placeholder="Observación"
                 onChangeText={text => setObservacion(text)}
                 />
         <View  style={[styles.VistaBtnSeguidos,{marginTop:30}]}>
-          <TouchableOpacity onPress={() => navigation.navigate('Registros')}
+          <TouchableOpacity onPress={() => navigation.navigate('Uniformes')}
               style={styles.BotonCancelar}>
               <Text style={[styles.colorTxtBtn,{color:"#000000"}]}>Cancelar</Text>
           </TouchableOpacity> 
@@ -172,7 +172,6 @@ const SalidaMaterial = ({route}) => {
               <Text style={styles.colorTxtBtn}>Guardar</Text>
           </TouchableOpacity>
         </View>
-
     <Modal
       animationType="slide"
       transparent={true}
@@ -191,12 +190,12 @@ const SalidaMaterial = ({route}) => {
             onPress={() => {
               setModalVisible(!modalVisible);
               route.params.fnRefresh();
-              navigation.navigate('Registros');}}>
+              navigation.navigate('c');}}>
             <Text style={styles.colorTxtBtn}>Entiendo</Text>
         </TouchableOpacity>
         </View>
       </View>
-    </Modal>     
+    </Modal> 
   </View>
   )
 }

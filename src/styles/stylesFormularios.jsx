@@ -75,6 +75,20 @@ const styles = StyleSheet.create({
         padding: 10,
         marginRight: 10,
     },
+    BotonAnadir:{
+        backgroundColor:"#05AB48",
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginRight: 10,
+    },
+    BotonListar:{
+        backgroundColor:"#0578FF",
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        marginRight: 10,
+    },
     textoSecundario:{
         marginTop:20,
         color:"#87898E"
@@ -91,11 +105,20 @@ const styles = StyleSheet.create({
     textFecha:{
         color:"#0578FF"
     },
-    circleIcon:{
+    circleIconCheck:{
         color:"#0578FF",
         fontSize: 15,
         marginRight:10
     },
+    circleIconCheck:{
+      backgroundColor:"#05AB484D",
+      color:"#05AB48",
+      fontSize: 25,
+      marginRight:10,
+      padding:10,
+      paddingVertical:13,
+      borderRadius:50
+  },
     //Dropdowm
     VistaInventario:{
         flexDirection: 'row',
@@ -137,5 +160,54 @@ const styles = StyleSheet.create({
         marginLeft:10,
         marginTop:10
       },
+    //Modals
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+      },
+      buttonOpen: {
+        backgroundColor: '#F194FF',
+      },
+      buttonClose: {
+        backgroundColor: '#2196F3',
+      },
+      textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      modalText: {
+        fontWeight: 'bold',
+        fontSize:20,
+        marginBottom: 15,
+        textAlign: 'center',
+      },
+      centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+      circleIcon:{
+        color: "blue",
+        paddingTop:3,
+        paddingHorizontal:10
+      }
 })
 export default styles;

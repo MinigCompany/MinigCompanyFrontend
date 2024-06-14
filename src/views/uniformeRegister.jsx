@@ -1,29 +1,27 @@
 import react,  {useContext, useState,useEffect,useCallback} from "react";
-import { Text, View, TextInput, TouchableOpacity, Alert,Modal } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, Image, Modal,FlatList, Alert } from 'react-native';
 import { useNavigation,useFocusEffect } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import Icons from 'react-native-vector-icons/Fontisto';
 import { Dropdown } from 'react-native-element-dropdown';
+import Icons from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
-import {saveMaterial,updateMaterial} from "../services/materialServices";
+import {saveUniform,updateUniform} from "../services/uniformServices";
 import {dataCategoriesDro} from "../services/categoryServices";
 import {dataUDMDro} from "../services/udmServices";
 let esNuevo=true;
-const Material = ({route}) => {
+const EntradaUniforme = ({route}) => {
   let nombreR;
   let cantidadR;
-  let precioR;
   let detalleR;
   let categoriaR;
   let udmR;
-  if(route.params.materialR!=null){
+  if(route.params.uniformeR!=null){
     esNuevo=false;
-    nombreR=route.params.materialR.nombreMaterial;
-    cantidadR=route.params.materialR.cantidad;
-    precioR=route.params.materialR.precio.$numberDecimal;
-    detalleR=route.params.materialR.detalle;
-    categoriaR=route.params.materialR.categoria;
-    udmR=route.params.materialR.udm;
+    nombreR=route.params.uniformeR.nombreUniforme;
+    cantidadR=route.params.uniformeR.cantidad;
+    detalleR=route.params.uniformeR.detalle;
+    categoriaR=route.params.uniformeR.categoria;
+    udmR=route.params.uniformeR.udm;
   }
   const fetchCategorias = async () => {
     const data = await dataCategoriesDro();
@@ -38,17 +36,15 @@ const Material = ({route}) => {
     }
   };
   const navigation = useNavigation();
-  const [cantidad, setCantidad] = useState(cantidadR==null?null:cantidadR+"");
-  const [Nombres, setNombres] = useState(nombreR);
-  const [precio, setPrecio] = useState(precioR);
   const [detalle, setDetalle] = useState(detalleR);
+  const [Nombre, setNombre] = useState(nombreR);
+  const [cantidad, setCantidad] = useState(cantidadR==null?null:cantidadR+"");
   const [categoria, setCategoria] = useState(categoriaR);
   const [udm, setUdm] = useState(udmR);
   const [isFocus, setIsFocus] = useState(false);
   const [isFocusUdm, setIsFocusUdm] = useState(false);
   const [allCategorias, setAllCategorias] = useState([]);
   const [allUdm, setAllUdm] = useState([]);
-
   const [modalVisible, setModalVisible] = useState(false);
   const [textoModal, setTextoModal] = useState("");
   const [tituloModal, setTituloModal] = useState("");
@@ -59,65 +55,63 @@ const Material = ({route}) => {
     }, [])
   
   );
-//almacenar fecha
+  //almacenar fecha
   const [textFechaIn, setTextIn] = useState(new Date);
   //Seleccionar Fecha
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const showDatePicker = () => {
         setDatePickerVisibility(true);
       };
-   const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-      };
-      const handleConfirm = (date) => {
-        //console.warn(date);
-        setTextIn(date);
-        hideDatePicker();
-      };
-      const valor1 = textFechaIn.toLocaleDateString();
-  
+  const hideDatePicker = () => {
+      setDatePickerVisibility(false);
+    };
+  const handleConfirm = (date) => {
+    console.warn(date);
+    setTextIn(date);
+    hideDatePicker();
+  };
+  const valor1 = textFechaIn.toLocaleDateString();
+  //Guardar Uniforme
   let validar=()=>{
     if(esNuevo){
-      if(cantidad==null || Nombres==null || precio==null || detalle==null || categoria==null || textFechaIn== null || udm==null){
+      if(cantidad==null || Nombre==null || detalle==null || categoria==null || textFechaIn== null || udm==null){
         Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
         return;
       }else{
-        let material = {
-          nombreMaterial:Nombres,
-          precio:parseFloat(precio),
+        let uniforme = {
+          nombreUniforme:Nombre,
           cantidad:parseInt(cantidad),
           udm:udm,
           detalle:detalle,
           categoria:categoria,
-          fecha:textFechaIn
+          fecha:textFechaIn,
         }
-        saveMaterial(material);
-        setTituloModal("Nuevo Material");
-        setTextoModal("El nuevo material ha sido guardado correctamente")
+        saveUniform(uniforme);
+        setTituloModal("Nueva Prenda-Uniforme");
+        setTextoModal("La nueva prenda ha sido guardado correctamente")
         setModalVisible(true);
       }
     }else{
-      let material = {
-        material_ID: route.params.materialR._id,
-        nombreMaterial:Nombres,
-        precio:parseFloat(precio),
+      let uniforme = {
+        uniforme_ID:route.params.uniformeR._id,
+        nombreUniforme:Nombre,
         cantidad:parseInt(cantidad),
         udm:udm,
         detalle:detalle,
         categoria:categoria,
-        fecha:textFechaIn
+        fecha:textFechaIn,
       }
-      updateMaterial(material);
+      updateUniform(uniforme);
       esNuevo=true;
-      setTituloModal("Material Actualizada");
-      setTextoModal("El material ha sido actualizado correctamente")
+      setTituloModal("Prenda-Uniforme Actualizada");
+      setTextoModal("La prenda ha sido actualizada correctamente")
       setModalVisible(true);
     }
   }
   return(
     <View style={styles.container}>
-        <Text style={styles.textoBien} >Nuevo Material</Text>
-        <Text style={styles.textoSecundario}>Ingrese los datos del nuevo material</Text>
+        <Text style={styles.textoBien} >Nueva Prenda de Uniforme</Text>
+        <Text style={styles.textoSecundario}>Ingrese los datos de la prenda del uniforme</Text>
         <TouchableOpacity style={styles.txtInputFecha} title="Fecha Ingreso" onPress={showDatePicker}>
                 <View style={styles.VistaBtnSeguidos}>
                 <Icons  name='date' style={styles.circleIcon}/>
@@ -129,24 +123,18 @@ const Material = ({route}) => {
               mode="date"
               onConfirm={handleConfirm}
               onCancel={hideDatePicker}
-            />
+        />
         <TextInput style={styles.txtInput} 
-                value={Nombres}
-                placeholder="Ingresar nombre del material"
-                onChangeText={text => setNombres(text)}
+                value={Nombre}
+                placeholder="Ingresar nombre del uniforme"
+                onChangeText={text => setNombre(text)}
                 />
         <TextInput style={styles.txtInput} 
-                value={precio}
-                placeholder="Precio(ex:0.25)"
-                keyboardType='numeric'
-                onChangeText={text => setPrecio(text)}
-                /> 
-        <TextInput style={styles.txtInput} 
-                value={cantidad}
-                placeholder="Cantidad"
-                keyboardType='number-pad'
-                onChangeText={text => setCantidad(text)}
+                value={detalle}
+                placeholder="Detalle"
+                onChangeText={text => setDetalle(text)}
                 />
+        
         <Dropdown
           style={[styles.dropdown,{backgroundColor:"#FFFFFF",borderBottomWidth: 1,marginTop:10}, isFocusUdm && { borderColor: 'blue' }]}
           placeholderStyle={styles.placeholderStyle}
@@ -165,13 +153,14 @@ const Material = ({route}) => {
           onBlur={() => setIsFocusUdm(false)}
           onChange={item => {
             setUdm(item.value);
-              setIsFocusUdm(false);
+            setIsFocusUdm(false);
           }}
         />
         <TextInput style={styles.txtInput} 
-                value={detalle}
-                placeholder="Detalle"
-                onChangeText={text => setDetalle(text)}
+                value={cantidad}
+                placeholder="Cantidad"
+                keyboardType='number-pad'
+                onChangeText={text => setCantidad(text)}
                 />
         <Dropdown
           style={[styles.dropdown,{backgroundColor:"#FFFFFF",borderBottomWidth: 1,marginTop:10}, isFocus && { borderColor: 'blue' }]}
@@ -195,12 +184,13 @@ const Material = ({route}) => {
           }}
         />
         <View  style={[styles.VistaBtnSeguidos,{marginTop:30}]}>
-          <TouchableOpacity onPress={() => {navigation.navigate('Inventario');esNuevo=true;route.params.fnRefresh();}}
+          <TouchableOpacity onPress={() => {prendas=[];navigation.navigate('Uniformes');}}
               style={styles.BotonCancelar}>
               <Text style={[styles.colorTxtBtn,{color:"#000000"}]}>Cancelar</Text>
           </TouchableOpacity> 
           <TouchableOpacity
-              style={styles.BotonGuardar} onPress={validar}>
+              style={styles.BotonGuardar}
+              onPress={validar}>
               <Text style={styles.colorTxtBtn}>Guardar</Text>
           </TouchableOpacity>
         </View>
@@ -221,15 +211,15 @@ const Material = ({route}) => {
             style={[styles.button, styles.buttonClose,{backgroundColor:"#05AB48",marginTop:10}]}
             onPress={() => {
               setModalVisible(!modalVisible);
-              navigation.navigate('Inventario');
               esNuevo=true;
+              navigation.navigate('Uniformes');
               route.params.fnRefresh();}}>
             <Text style={styles.colorTxtBtn}>Entiendo</Text>
         </TouchableOpacity>
         </View>
       </View>
-    </Modal>      
+    </Modal>   
   </View>
   )
 }
-export default Material;
+export default EntradaUniforme;

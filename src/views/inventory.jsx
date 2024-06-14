@@ -61,23 +61,12 @@ const Inventory = ({route}) => {
     }
     const refreshList=()=>{
         setTime(new Date().getTime());
-    }
-      const renderLabel = () => {
-        if (value || isFocus) {
-          return (
-            <Text style={[styles.label, isFocus && { color: 'blue' }]}>
-              Materiales
-            </Text>
-          );
-        }
-        return null;
-      };
-    
+    }    
     const ItemMaterials=({material})=>{
         const borderColor = material.saldo < 5 ? 'red' : 'green';
         return (
             <View  style={[styles.VistaMateriales,{borderColor}]}>
-                <View style={[styles.Separador,{flex: 1 }]}>
+                <View style={[styles.Separador,{flex: 1,alignItems:"flex-start", justifyContent:"center" }]}>
                     <Text style={styles.txtFiltro}>$ {material.precio.$numberDecimal}</Text> 
                     <Icon name="paperclip"  type="antdesign" size={25} color="#FF8400" />
                 </View>
@@ -191,7 +180,7 @@ const Inventory = ({route}) => {
                                 onPress={() => {
                                     setModalVisible(!modalVisible);
                                     deleteMaterial(materialAux._id);
-                                    refreshList();
+                                    fetchMaterials();
                                 }}>
                                 <Text style={styles.textStyle}>Eliminar</Text>
                             </TouchableOpacity>
