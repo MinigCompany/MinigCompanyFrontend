@@ -6,8 +6,8 @@ import { Dropdown } from 'react-native-element-dropdown';
 import Icons from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
 import {saveUniform,updateUniform} from "../services/uniformServices";
-import {dataCategoriesDro} from "../services/categoryServices";
-import {dataUDMDro} from "../services/udmServices";
+import {dataCategoriesDroUniforme} from "../services/categoryServices";
+import {dataUDMDroUniform} from "../services/udmServices";
 let esNuevo=true;
 const EntradaUniforme = ({route}) => {
   let nombreR;
@@ -24,13 +24,13 @@ const EntradaUniforme = ({route}) => {
     udmR=route.params.uniformeR.udm;
   }
   const fetchCategorias = async () => {
-    const data = await dataCategoriesDro();
+    const data = await dataCategoriesDroUniforme();
     if(data){
       setAllCategorias(data);
     }
   };
   const fetchUDM = async () => {
-    const data = await dataUDMDro();
+    const data = await dataUDMDroUniform();
     if(data){
       setAllUdm(data);
     }

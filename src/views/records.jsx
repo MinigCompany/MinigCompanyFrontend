@@ -168,7 +168,7 @@ const Records = () =>{
                     </View>
                     
                     <View style={{ flex: 1 }}>
-                        <Text style={styles.txtFiltro}>Hoy</Text>
+                        <Text style={styles.txtFiltro}>Salidas</Text>
                         <FlatList
                             data={outputs}
                             renderItem={({item})=>{

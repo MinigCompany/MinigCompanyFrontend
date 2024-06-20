@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     },
     VistaInventario:{
         flexDirection: 'row',
-        marginLeft: 10,
         marginBottom: 10,
         justifyContent: 'flex-start',
     },
@@ -45,6 +44,15 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         padding: 10,
+    },
+    VistaMaterial:{
+      flexDirection: 'row',
+      alignItems:"center",
+      justifyContent: 'center',
+      backgroundColor:"aqua",
+      borderWidth: 1,
+      borderRadius: 5,
+      padding: 5,
     },
     txtNewMaterial:{
         fontWeight: 'bold',

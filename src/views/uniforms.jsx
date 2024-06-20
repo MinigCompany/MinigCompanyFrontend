@@ -4,37 +4,31 @@ import { Text, View, TextInput, TouchableOpacity, Image, Modal,ScrollView,FlatLi
 import { useNavigation,useFocusEffect } from "@react-navigation/native";
 import styles from '../styles/stylesInventory';
 import {Icon} from 'react-native-elements';
-import {allUniforms,deleteUniform} from "../services/uniformServices";
+import {allUniforms,dataUniformDro,deleteUniform} from "../services/uniformServices";
 import { Dropdown } from 'react-native-element-dropdown';
+import {dataInputDroUniform,allOutputsUniform} from "../services/InputServices";
 let uniformAux=null;
 const Uniforms = () =>{
     const navigation = useNavigation();
+    const [showUniformes, setShowUniformes] = useState(true);
     const [time, setTime] = useState([]);
     const [nombreUser, setNombreUser] = useState();
     const [ApellidoUser, setApellidoUser] = useState();
     const [uniformes, setUniformes] = useState([]);
+    const [uniformesDro, setUniformesDro] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
-    const data = [
-        { label: 'Item 1', value: '1' },
-        { label: 'Item 2', value: '2' },
-        { label: 'Item 3', value: '3' },
-      ];
-      const [value, setValue] = useState(null);
-      const [isFocus, setIsFocus] = useState(false);
-      const renderLabel = () => {
-        if (value || isFocus) {
-          return (
-            <Text style={[styles.label, isFocus && { color: 'blue' }]}>
-              Materiales
-            </Text>
-          );
-        }
-        return null;
-      };
+    const [dropdownEnabled, setDropdownEnabled] = useState(true);
+    const [inputs, setInputs] = useState([]);
+    const [outputs, setOutputs] = useState([]);
+    const [value, setValue] = useState();
+    const [valueEnt, setValueEnt] = useState();
+    const [isFocus, setIsFocus] = useState(false);
+    const [isFocusEnt, setIsFocusEnt] = useState(false);
     useFocusEffect(
         useCallback(() => {
             getUser();
             fetchUniforme();
+            fetchUniformeDro();
         }, [])
     );
     const refreshList=()=>{
@@ -46,6 +40,12 @@ const Uniforms = () =>{
             setUniformes(data.Uniformes);
         }
     }
+    const fetchUniformeDro = async () => {
+        const data = await dataUniformDro();
+        if(data){
+            setUniformesDro(data);
+        }
+    };
     const getUser = async () =>{   
         try {
           const userData = await AsyncStorage.getItem('userData');
@@ -59,6 +59,24 @@ const Uniforms = () =>{
             console.error('Error al obtener:', error);
         }     
     }
+    const fetchEntradas=async(valor)=>{
+        setValue(valor);
+        console.log(value);
+        const data = await dataInputDroUniform(valor);
+        setValueEnt();
+        if(data){
+            setInputs(data);
+        }
+    };
+    const fetchSalidas=async(valor)=>{
+        setValueEnt(valor);
+        const data = await allOutputsUniform(value,valor);
+        //console.log(data.salidas);
+        setOutputs([])
+        if(data){
+            setOutputs(data.salidas);
+        }
+    };
     const ItemUniforms=({uniforme})=>{
         const borderColor = uniforme.saldo < 5 ? 'red' : 'green';
         return (
@@ -92,6 +110,34 @@ const Uniforms = () =>{
             </View>
         );
     }
+    const ItemSalidas=({salida})=>{
+        return(
+            <View  style={[styles.VistaMateriales,{flex:1,alignItems:"center"}]}>
+                <View style={[styles.Separador,{flex:1}]}>
+                    <Image style={styles.imageOutPut} source={require('../../assets/output.png')} />
+                </View>
+                <View style={[styles.Separador,{flex:1,alignItems:"center"}]}>
+                    <Image style={{width: 5,height: 80,}} source={require('../../assets/Line.png')} />
+                </View>
+                <View style={[styles.Separador,{flex:5}]}>
+                    <Text style={styles.tituloMaterial}>SALIDA DE UNIFORMES</Text>
+                    <Text style={styles.subtitulo}>{salida.observacion} </Text>
+                    <View style={styles.VistaCodigo}>
+                        <View style={styles.VistaCodigo}>
+                            <Text style={styles.subtitulo}>Cantidad de material: </Text>
+                            <Text style={styles.subtitulo}>{salida.cantidad} unidades</Text>
+                        </View>
+                    </View>
+                    <View style={styles.VistaCodigo}>
+                        <View style={styles.VistaCodigo}>
+                            <Text style={styles.subtitulo}>Para: </Text>
+                            <Text style={styles.subtitulo}>{salida.nombreTrabajador}</Text>
+                        </View>
+                    </View>
+                </View >
+            </View>
+        );
+    }
     return(
         <View style={styles.container}>
             <View style={styles.mainContainer}>
@@ -121,26 +167,32 @@ const Uniforms = () =>{
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.txtFiltro}>Filtros</Text>
+                    <TouchableOpacity style={[styles.VistaMaterial]} onPress={() => setShowUniformes(!showUniformes)}>
+                            <Text style={styles.txtNewMaterial}>{showUniformes ? 'Cambiar vista Salidas' : 'Cambiar vista Uniformes'}</Text>
+                    </TouchableOpacity>
                     <View style={styles.VistaInventario}>
-                        <Dropdown
+                    <Dropdown
                         style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
                         placeholderStyle={styles.placeholderStyle}
                         selectedTextStyle={styles.selectedTextStyle}
                         inputSearchStyle={styles.inputSearchStyle}
                         iconStyle={styles.iconStyle}
-                        data={data}
+                        data={uniformesDro}
                         search
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus ? 'Material' : '...'}
-                        searchPlaceholder="Search..."
+                        placeholder={!isFocus ? 'Uniformes' : '...'}
+                        searchPlaceholder="Buscar..."
                         value={value}
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
                         onChange={item => {
                             setValue(item.value);
                             setIsFocus(false);
+                            fetchEntradas(item.value);
+                            console.log(item.label+" "+item.value);
+                            setDropdownEnabled(false);
                         }}
                         />
                         <Dropdown
@@ -149,33 +201,47 @@ const Uniforms = () =>{
                         selectedTextStyle={styles.selectedTextStyle}
                         inputSearchStyle={styles.inputSearchStyle}
                         iconStyle={styles.iconStyle}
-                        data={data}
+                        data={inputs}
                         search
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus ? 'Categoria' : '...'}
-                        searchPlaceholder="Search..."
-                        value={value}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
+                        placeholder={!isFocusEnt ? 'Entrada (fecha)' : '...'}
+                        searchPlaceholder="Buscar..."
+                        value={valueEnt}
+                        onFocus={() => setIsFocusEnt(true)}
+                        onBlur={() => setIsFocusEnt(false)}
                         onChange={item => {
-                            setValue(item.value);
-                            setIsFocus(false);
+                            setValueEnt(item.value);
+                            setIsFocusEnt(false);
+                            fetchSalidas(item.value);
                         }}
+                        disable={dropdownEnabled}
                         />
                     </View>
-                    
                     <View >
-                        <Text style={styles.txtFiltro}>Uniformes</Text>
-                        <FlatList
-                            data={uniformes}
-                            renderItem={({item})=>{
-                                return <ItemUniforms uniforme={item}/>
-                            }}
-                            keyExtractor={(item)=>{return item._id}}
-                            extraData={time}
-                        />
+                        <Text style={styles.txtFiltro}>{showUniformes ? 'Uniformes' : 'Salidas'}</Text>
+                        {showUniformes ?(
+                            <FlatList
+                                data={uniformes}
+                                renderItem={({item})=>{
+                                    return <ItemUniforms uniforme={item}/>
+                                }}
+                                keyExtractor={(item)=>{return item._id}}
+                                extraData={time}
+                            />
+                            ):(
+                                <FlatList
+                                data={outputs}
+                                renderItem={({item})=>{
+                                    return <ItemSalidas salida={item}/>
+                                }}
+                                keyExtractor={(item)=>{return item._id}}
+                                extraData={time}
+                            />
+                            )
+                        }
+                        
                     </View>
             </View>
             <Modal

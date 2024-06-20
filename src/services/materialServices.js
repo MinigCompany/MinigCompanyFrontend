@@ -1,8 +1,8 @@
 import axios from "axios";
-import{BASE_URL} from "../config";
+import{MATERIAL_URL} from "../config";
 
 export const saveMaterial=(material)=>{
-    axios.post(`${BASE_URL}/Materiales/AddMaterial`,{
+    axios.post(`${MATERIAL_URL}/Materiales/AddMaterial`,{
         nombreMaterial:material.nombreMaterial,
         precio:material.precio,
         cantidad:material.cantidad,
@@ -21,7 +21,7 @@ export const saveMaterial=(material)=>{
 }
 export const allMaterials=async()=>{
     try {
-        const response = await axios.get(`${BASE_URL}/Materiales/Materiales`);
+        const response = await axios.get(`${MATERIAL_URL}/Materiales/Materiales`);
         //console.log('Datos recibidos:', response.data);
         return response.data; // Retornamos los datos directamente
     } catch (error) {
@@ -46,7 +46,7 @@ export const dataMaterialDro=async()=>{
 }
 export const allMaterialsCategoria=async(cadena)=>{
     try {
-        const response = await axios.get(`${BASE_URL}/Materiales/MaterialCategoria/`+cadena);
+        const response = await axios.get(`${MATERIAL_URL}/Materiales/MaterialCategoria/`+cadena);
         //console.log('Hola Datos recibidos:', response.data);
         return response.data; // Retornamos los datos directamente
     } catch (error) {
@@ -56,7 +56,7 @@ export const allMaterialsCategoria=async(cadena)=>{
     }
 }
 export const updateMaterial=(material)=>{
-    axios.put(`${BASE_URL}/Materiales/UpdateMaterial`,{
+    axios.put(`${MATERIAL_URL}/Materiales/UpdateMaterial`,{
         material_ID:material.material_ID,
         nombreMaterial:material.nombreMaterial,
         precio:material.precio,
@@ -76,7 +76,7 @@ export const updateMaterial=(material)=>{
 }
 
 export const deleteMaterial=(id)=>{
-    axios.delete(`${BASE_URL}/Materiales/DeleteMaterial/`+id)
+    axios.delete(`${MATERIAL_URL}/Materiales/DeleteMaterial/`+id)
     .then(res => {
         if (res){
             console.log("Material eliminado: "+id)

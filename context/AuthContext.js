@@ -2,23 +2,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, {createContext, useEffect, useState} from 'react';
 import { Alert} from 'react-native';
-import { BASE_URL } from '../src/config';
+import { AUTH_URL } from '../src/config';
 import { NavigationContainer, useNavigation } from "@react-navigation/native"; 
-
-import { Navigation } from "../Navigation";
 import * as RootNavigation from '../RootNavigation';
 export const AuthContext = createContext();
 
 function useCounter() {
-    // Bien: nivel superior en un componente de función
-  //  const navigation = useNavigation();
-   //const [navigation] = useNavigation({});
    return console.log("mi token");
  }
  function createTwoButtonAlert (){
     Alert.alert(
       "Campos Inválidos",
-      "Los credenciales están vacíos o son incorrectos",
+      "Usuario o contraseña incorrectos",
       [
         { text: "OK", onPress: () => console.log("OK Pressed") }
       ]
@@ -65,7 +60,7 @@ export const AuthProvider = ({children}) => {
           setIsLoading(false);
           return;
         }
-        axios.post(`${BASE_URL}/Autenticacion/Registro`,{
+        axios.post(`${AUTH_URL}/Autenticacion/Registro`,{
             nombres, apellidos, telefono, correo, contrasenia
         }).then(res => {
             let userInfo = res.data;
@@ -78,16 +73,21 @@ export const AuthProvider = ({children}) => {
                 RootNavigation.navigate('Login');
             }
         }).catch(e =>{
-            createTwoButtonAlertRegistro("Los credenciales están vacíos o son incorrectos");
-            console.log(`error en registro ${e}`);
+            if(e.response.status===400){
+            createTwoButtonAlertRegistro("El correo electronico ya se encuentra registrado");
             setIsLoading(false);
+            }else{
+            createTwoButtonAlertRegistro("Problema al registrar al usuario");
+            setIsLoading(false);
+            }
+            
         })
     };
 
     // Login
     const loginM = async (correo, contrasenia) =>{
       setIsLoading(true);
-        axios.post(`${BASE_URL}/Autenticacion/login`,{
+        axios.post(`${AUTH_URL}/Autenticacion/login`,{
             correo,
             contrasenia
         }).then(res => {

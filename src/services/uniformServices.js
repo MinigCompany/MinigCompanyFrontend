@@ -1,8 +1,8 @@
 import axios from "axios";
-import{BASE_URL} from "../config";
+import{UNIFORM_URL} from "../config";
 
 export const saveUniform=(uniforme)=>{
-    axios.post(`${BASE_URL}/Uniformes/AddUniforme`,{
+    axios.post(`${UNIFORM_URL}/Uniformes/AddUniforme`,{
         nombreUniforme:uniforme.nombreUniforme,
         cantidad:uniforme.cantidad,
         udm:uniforme.udm,
@@ -20,7 +20,7 @@ export const saveUniform=(uniforme)=>{
 }
 export const allUniforms=async()=>{
     try {
-        const response = await axios.get(`${BASE_URL}/Uniformes/Uniformes`);
+        const response = await axios.get(`${UNIFORM_URL}/Uniformes/Uniformes`);
         //console.log('Datos recibidos:', response.data);
         return response.data; // Retornamos los datos directamente
     } catch (error) {
@@ -44,7 +44,7 @@ export const dataUniformDro=async()=>{
     }
 }
 export const updateUniform=(uniforme)=>{
-    axios.put(`${BASE_URL}/Uniformes/UpdateUniforme`,{
+    axios.put(`${UNIFORM_URL}/Uniformes/UpdateUniforme`,{
         uniforme_ID:uniforme.uniforme_ID,
         nombreUniforme:uniforme.nombreUniforme,
         cantidad:uniforme.cantidad,
@@ -62,7 +62,7 @@ export const updateUniform=(uniforme)=>{
     });
 }
 export const deleteUniform=(id)=>{
-    axios.delete(`${BASE_URL}/Uniformes/DeleteUniforme/`+id)
+    axios.delete(`${UNIFORM_URL}/Uniformes/DeleteUniforme/`+id)
     .then(res => {
         if (res){
             console.log("Uniforme eliminado: "+id)
