@@ -190,7 +190,7 @@ const SalidaMaterial = ({route}) => {
             onPress={() => {
               setModalVisible(!modalVisible);
               route.params.fnRefresh();
-              navigation.navigate('c');}}>
+              navigation.navigate('Uniformes');}}>
             <Text style={styles.colorTxtBtn}>Entiendo</Text>
         </TouchableOpacity>
         </View>
