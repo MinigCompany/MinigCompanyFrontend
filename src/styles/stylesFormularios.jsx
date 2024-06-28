@@ -106,11 +106,6 @@ const styles = StyleSheet.create({
         color:"#0578FF"
     },
     circleIconCheck:{
-        color:"#0578FF",
-        fontSize: 15,
-        marginRight:10
-    },
-    circleIconCheck:{
       backgroundColor:"#05AB484D",
       color:"#05AB48",
       fontSize: 25,
@@ -125,6 +120,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginBottom: 10,
         justifyContent: 'center',
+    },
+    dropdownTra: {
+      height: 50,
+      width:230,
+      borderRadius: 8,
+      backgroundColor:"#FFFFFF",
+      borderBottomWidth:1,
+      padding:10,
     },
     dropdown: {
         height: 50,
@@ -206,8 +209,19 @@ const styles = StyleSheet.create({
       },
       circleIcon:{
         color: "blue",
-        paddingTop:3,
-        paddingHorizontal:10
+        paddingHorizontal:10,
+        fontSize:15
+      },
+      // Vista trabajador
+      viewTrabajador:{
+        flexDirection:"row"
+      },
+      btnTrabajador:{
+        marginHorizontal:10,
+        borderColor: '#0578FF',
+        borderWidth: 2,
+        borderRadius: 5,
+        padding: 10,
       }
 })
 export default styles;

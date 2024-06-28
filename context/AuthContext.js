@@ -98,7 +98,7 @@ export const AuthProvider = ({children}) => {
             if (userInfo.status){
                 console.log("mi token", token);
                 //navigation.navigate('Cuenta creada');Cuenta creada
-                RootNavigation.navigate('Inventario');
+                RootNavigation.navigate('InventarioStack');
             }
             setIsLoading(false);
 

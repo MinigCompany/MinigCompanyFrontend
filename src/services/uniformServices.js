@@ -72,3 +72,14 @@ export const deleteUniform=(id)=>{
         console.log(id)
     });
 }
+export const allUniformsHistorial=async()=>{
+    try {
+        const response = await axios.get(`${UNIFORM_URL}/Historial`);
+        //console.log('Datos recibidos:', response.data);
+        return response.data; // Retornamos los datos directamente
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        // Podrías retornar un valor especial como null o undefined para indicar que la solicitud falló
+        return null;
+    }
+}

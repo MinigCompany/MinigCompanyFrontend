@@ -32,15 +32,7 @@ const Login = () => {
                     onChangeText={text => setPassword(text)}
                     />
             </View>
-            <View style={styles.IconText}> 
-            <CheckBox
-              center
-              title="Recordar Cuenta"
-              checked={check1}
-              onPress={() => setCheck1(!check1)}
-            />
-            </View>
-            <TouchableOpacity onPress={() =>{loginM(username, password)}}
+            <TouchableOpacity onPress={() =>{setUsername("");setPassword("");loginM(username, password)}}
                 style={styles.colorBtn}>
             <Text style={styles.colorTxtBtn}>Iniciar Sesión</Text>
             </TouchableOpacity>

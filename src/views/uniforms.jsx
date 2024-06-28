@@ -104,7 +104,7 @@ const Uniforms = () =>{
                         uniformAux = uniforme;
                     }}
                     style={[styles.colorBtn,{backgroundColor:"#FFFFFF",borderRadius:5,borderWidth:1,padding:2}]}>
-                        <Icon name="edit" type="antdesign" size={25} color="#FF8400"/>
+                        <Icon name="delete" type="antdesign" size={25} color="red"/>
                     </TouchableOpacity> 
                 </View>
             </View>
@@ -140,7 +140,7 @@ const Uniforms = () =>{
     }
     return(
         <View style={styles.container}>
-            <View style={styles.mainContainer}>
+            <View style={[styles.mainContainer,{flex: 1 }]}>
                 <Text style={styles.txtInfoUser}>Hola, {nombreUser} {ApellidoUser}</Text>
                 <Text style={styles.txtBien}>Bienvenida a Mining Company</Text>
                 <View style={styles.VistaInventario}>
@@ -149,7 +149,7 @@ const Uniforms = () =>{
                     </View>
                     <View style={styles.VistaCodigo}>
                         <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50,backgroundColor:"#0578FF"}]} 
-                        onPress={() => navigation.navigate('NewUniform',{fnRefresh:refreshList})}>
+                        onPress={() => navigation.navigate('NewUniform')}>
                             <View style={styles.contenedorTextoSalida}>
                                 <Text style={[styles.txtNewMaterial,{color:"#FFFFFF"}]}>Nuevo</Text>
                             </View>
@@ -157,7 +157,7 @@ const Uniforms = () =>{
                                 <Image style={styles.image} source={require('../../assets/category.png')} />
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50}]} onPress={() => navigation.navigate('NewUniformSalida',{fnRefresh:refreshList})}>
+                        <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50}]} onPress={() => navigation.navigate('NewUniformSalida')}>
                             <View style={styles.contenedorTextoSalida}>
                                 <Text style={styles.txtNewMaterial}>Salidas</Text>
                             </View>
@@ -171,7 +171,7 @@ const Uniforms = () =>{
                             <Text style={styles.txtNewMaterial}>{showUniformes ? 'Cambiar vista Salidas' : 'Cambiar vista Uniformes'}</Text>
                     </TouchableOpacity>
                     <View style={styles.VistaInventario}>
-                    <Dropdown
+                        <Dropdown
                         style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
                         placeholderStyle={styles.placeholderStyle}
                         selectedTextStyle={styles.selectedTextStyle}
@@ -219,7 +219,7 @@ const Uniforms = () =>{
                         disable={dropdownEnabled}
                         />
                     </View>
-                    <View >
+                    <View style={{ flex: 1 }}>
                         <Text style={styles.txtFiltro}>{showUniformes ? 'Uniformes' : 'Salidas'}</Text>
                         {showUniformes ?(
                             <FlatList
@@ -245,40 +245,35 @@ const Uniforms = () =>{
                     </View>
             </View>
             <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+                Alert.alert('Modal se cerro.');
                 setModalVisible(!modalVisible);
-                }}>
+            }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Que desea hacer?</Text>
-                        <View style={{flexDirection:"row",alignItems:"stretch", margin:20}}>
+                        <Text style={[styles.modalText,{color:"red",}]}>Eliminar el Uniforme</Text>
+                        <Icon  name='delete' color ="#FC2323" style={styles.circleIconCheck}/>
+                        <Text style={styles.textoSecundario}>Esta seguro que desea eliminar el Uniforme </Text>
+                        <View style={[{flexDirection:"row",}]}>
                             <TouchableOpacity
-                                style={[styles.button,{marginRight:20, backgroundColor:"#05AB48", paddingHorizontal:30}]}
-                                onPress={() => {
-                                    setModalVisible(!modalVisible);
-                                    navigation.navigate('NewUniform',{uniformeR:uniformAux,fnRefresh:refreshList});
-                                }}>
-                                <Text style={styles.textStyle}>Editar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.button,styles.buttonClose,]}
+                                style={[styles.button, styles.buttonClose,{backgroundColor:"#FC2323",marginTop:10}]}
                                 onPress={() => {
                                     setModalVisible(!modalVisible);
                                     deleteUniform(uniformAux._id);
                                     fetchUniforme();
                                 }}>
-                                <Text style={styles.textStyle}>Eliminar</Text>
+                                <Text style={styles.colorTxtBtn}>Eliminar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.button, styles.buttonClose,{marginLeft:5,marginTop:10}]}
+                                onPress={() => {
+                                setModalVisible(!modalVisible)}}>
+                                <Text style={styles.colorTxtBtn}>Cancelar</Text>
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity
-                                style={[styles.button,{backgroundColor:"#48A1D4"}]}
-                                onPress={() => {setModalVisible(!modalVisible);refreshList();}}>
-                                <Text style={styles.textStyle}>Cancelar</Text>
-                            </TouchableOpacity>
                     </View>
                 </View>
             </Modal>

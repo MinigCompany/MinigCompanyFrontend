@@ -8,23 +8,25 @@ import { Dropdown } from 'react-native-element-dropdown';
 import {dataMaterialDro} from "../services/materialServices";
 import {saveSalida} from "../services/InputServices";
 import {dataUDMDro} from "../services/udmServices";
+import {dataTrabajadoresDro} from '../services/trabajadoresServices';
 let esNuevo=true;
 const SalidaMaterial = ({route}) => {
   const navigation = useNavigation();
   const [cantidad, setCantidad] = useState(null);
-  const [nombres, setNombres] = useState(null);
   const [observacion, setObservacion] = useState(null);
   const [materials, setMaterials] = useState([]);
   const [udm, setUdm] = useState(null);
   const [allUdm, setAllUdm] = useState([]);
   const [isFocusUdm, setIsFocusUdm] = useState(false);
-
+  const [trabajadores, setTrabajadores] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [textoModal, setTextoModal] = useState("");
   const [tituloModal, setTituloModal] = useState("");
   //variables de estado para el Dropdown
   const [value, setValue] = useState(null);
+  const [valueNombre, setValueNombre] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [isFocusDow, setIsFocusDow] = useState(false);
   //almacenar fecha
   const [textFechaIn, setTextIn] = useState(new Date);
   //Seleccionar Fecha
@@ -33,8 +35,15 @@ const SalidaMaterial = ({route}) => {
       useCallback(() => {
           fetchMaterial();
           fetchUDM();
+          fetchTrabajadores();
       }, [])
   );
+  const fetchTrabajadores = async () => {
+    const data = await dataTrabajadoresDro();
+    if(data){
+      setTrabajadores(data);
+    }
+  };
   const fetchMaterial = async () => {
     const data = await dataMaterialDro();
     if(data){
@@ -50,13 +59,15 @@ const SalidaMaterial = ({route}) => {
   let validar=()=>{
     if(esNuevo){
       if(value!= null){
-        if(cantidad==null || nombres==null || observacion==null || textFechaIn== null || udm==null){
+        if(cantidad==null || valueNombre==null || observacion==null || textFechaIn== null || udm==null ||
+          cantidad=="" || valueNombre=="" || observacion=="" || textFechaIn== "" || udm==""
+        ){
           Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
           return;
         }else{
           let salida = {
             idmaterial:value,
-            nombreTrabajador:nombres,
+            nombreTrabajador:valueNombre,
             cantidad:parseInt(cantidad),
             udm:udm,
             observacion:observacion,
@@ -91,25 +102,25 @@ const SalidaMaterial = ({route}) => {
         <Text style={styles.textoSecundario}>Ingrese los datos para la salida del material a los trabajadores</Text>
         <View >
             <Dropdown
-            style={[styles.dropdown,{marginTop:10}, isFocus && { borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={materials}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Seleccionar Material' : '...'}
-            searchPlaceholder="Buscar..."
-            value={value}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-                setValue(item.value);
-                setIsFocus(false);
-            }}
+              style={[styles.dropdown,{marginTop:10}, isFocus && { borderColor: 'blue'}]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={materials}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? 'Seleccionar Material' : '...'}
+              searchPlaceholder="Buscar..."
+              value={value}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={item => {
+                  setValue(item.value);
+                  setIsFocus(false);
+              }}
             />
         </View>
         <Text style={styles.textoSecundario} >Detalles de la salida</Text>
@@ -125,11 +136,32 @@ const SalidaMaterial = ({route}) => {
               onConfirm={handleConfirm}
               onCancel={hideDatePicker}
             />
-        <TextInput style={styles.txtInput} 
-                value={nombres}
-                placeholder="Nombre del trabajador"
-                onChangeText={text => setNombres(text)}
-                />
+        <View style={[styles.viewTrabajador,{padding:10}]}>
+            <Dropdown
+              style={[styles.dropdownTra, isFocusDow && { borderColor: 'blue'}]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={trabajadores}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocusDow ? 'Trabajadores' : '...'}
+              searchPlaceholder="Buscar..."
+              value={valueNombre}
+              onFocus={() => setIsFocusDow(true)}
+              onBlur={() => setIsFocusDow(false)}
+              onChange={item => {
+                  setValueNombre(item.value);
+                  setIsFocusDow(false);
+              }}
+            />
+            <TouchableOpacity style={styles.btnTrabajador} title="Trabajador" onPress={() => navigation.navigate('NewTrabajador')} >
+                <Icon  name='male' style={[styles.circleIcon,{fontSize:20}]}/>
+            </TouchableOpacity> 
+        </View>
         <TextInput style={styles.txtInput} 
                 value={cantidad}
                 placeholder="Cantidad"
@@ -190,7 +222,6 @@ const SalidaMaterial = ({route}) => {
             style={[styles.button, styles.buttonClose,{backgroundColor:"#05AB48",marginTop:10}]}
             onPress={() => {
               setModalVisible(!modalVisible);
-              route.params.fnRefresh();
               navigation.navigate('Registros');}}>
             <Text style={styles.colorTxtBtn}>Entiendo</Text>
         </TouchableOpacity>

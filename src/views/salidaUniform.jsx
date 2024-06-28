@@ -7,23 +7,26 @@ import styles from '../styles/stylesFormularios';
 import { Dropdown } from 'react-native-element-dropdown';
 import {dataUniformDro} from "../services/uniformServices";
 import {saveSalidaUniform} from "../services/InputServices";
-import {dataUDMDro} from "../services/udmServices";
+import {dataUDMDro} from "../services/udmServices"
+import {dataTrabajadoresDro} from '../services/trabajadoresServices';
 let esNuevo=true;
-const SalidaMaterial = ({route}) => {
+const SalidaUniformes = ({route}) => {
   const navigation = useNavigation();
   const [cantidad, setCantidad] = useState(null);
-  const [nombres, setNombres] = useState(null);
   const [observacion, setObservacion] = useState(null);
   const [uniforms, setUniforms] = useState([]);
   const [udm, setUdm] = useState(null);
   const [allUdm, setAllUdm] = useState([]);
   const [isFocusUdm, setIsFocusUdm] = useState(false);
+  const [trabajadores, setTrabajadores] = useState([]);  
   const [modalVisible, setModalVisible] = useState(false);
   const [textoModal, setTextoModal] = useState("");
   const [tituloModal, setTituloModal] = useState("");
   //variables de estado para el Dropdown
   const [value, setValue] = useState(null);
+  const [valueNombre, setValueNombre] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [isFocusDow, setIsFocusDow] = useState(false);
   //almacenar fecha
   const [textFechaIn, setTextIn] = useState(new Date);
   //Seleccionar Fecha
@@ -32,8 +35,15 @@ const SalidaMaterial = ({route}) => {
       useCallback(() => {
           fetchUniforms();
           fetchUDM();
+          fetchTrabajadores();
       }, [])
   );
+  const fetchTrabajadores = async () => {
+    const data = await dataTrabajadoresDro();
+    if(data){
+      setTrabajadores(data);
+    }
+  };
   const fetchUniforms = async () => {
     const data = await dataUniformDro();
     if(data){
@@ -49,13 +59,15 @@ const SalidaMaterial = ({route}) => {
   let validar=()=>{
     if(esNuevo){
       if(value!= null){
-        if(cantidad==null || nombres==null || observacion==null || textFechaIn== null || udm==null){
+        if(cantidad==null || valueNombre==null || observacion==null || textFechaIn== null || udm==null || 
+          cantidad=="" || valueNombre=="" || observacion=="" || textFechaIn== ""|| udm==""
+        ){
           Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
           return;
         }else{
           let salida = {
             idUniform:value,
-            nombreTrabajador:nombres,
+            nombreTrabajador:valueNombre,
             cantidad:parseInt(cantidad),
             udm:udm,
             observacion:observacion,
@@ -68,7 +80,7 @@ const SalidaMaterial = ({route}) => {
           
         }
       }else{
-        Alert.alert("Info.","Debe de elegir al menos un material");
+        Alert.alert("Info.","Debe de elegir al menos un uniforme");
       }
     }
   }
@@ -125,10 +137,37 @@ const SalidaMaterial = ({route}) => {
               onConfirm={handleConfirm}
               onCancel={hideDatePicker}
             />
+        <View style={[styles.viewTrabajador,{padding:10}]}>
+            <Dropdown
+              style={[styles.dropdownTra, isFocusDow && { borderColor: 'blue'}]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={trabajadores}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocusDow ? 'Trabajadores' : '...'}
+              searchPlaceholder="Buscar..."
+              value={valueNombre}
+              onFocus={() => setIsFocusDow(true)}
+              onBlur={() => setIsFocusDow(false)}
+              onChange={item => {
+                  setValueNombre(item.value);
+                  setIsFocusDow(false);
+              }}
+            />
+            <TouchableOpacity style={styles.btnTrabajador} title="Trabajador" onPress={() => navigation.navigate('NewTrabajador')} >
+                <Icon  name='male' style={[styles.circleIcon,{fontSize:20}]}/>
+            </TouchableOpacity> 
+        </View>
         <TextInput style={styles.txtInput} 
-                value={nombres}
-                placeholder="Nombre del trabajador"
-                onChangeText={text => setNombres(text)}
+                value={cantidad}
+                placeholder="Cantidad"
+                keyboardType='number-pad'
+                onChangeText={text => setCantidad(text)}
                 />
         <Dropdown
           style={[styles.dropdown,{backgroundColor:"#FFFFFF",borderBottomWidth: 1,marginTop:10}, isFocusUdm && { borderColor: 'blue' }]}
@@ -151,12 +190,6 @@ const SalidaMaterial = ({route}) => {
               setIsFocusUdm(false);
           }}
         />
-        <TextInput style={styles.txtInput} 
-                value={cantidad}
-                placeholder="Cantidad"
-                keyboardType='number-pad'
-                onChangeText={text => setCantidad(text)}
-                />
         <TextInput style={styles.txtInput} 
                 value={observacion}
                 placeholder="Observación"
@@ -189,7 +222,6 @@ const SalidaMaterial = ({route}) => {
             style={[styles.button, styles.buttonClose,{backgroundColor:"#05AB48",marginTop:10}]}
             onPress={() => {
               setModalVisible(!modalVisible);
-              route.params.fnRefresh();
               navigation.navigate('Uniformes');}}>
             <Text style={styles.colorTxtBtn}>Entiendo</Text>
         </TouchableOpacity>
@@ -199,4 +231,4 @@ const SalidaMaterial = ({route}) => {
   </View>
   )
 }
-export default SalidaMaterial;
+export default SalidaUniformes;

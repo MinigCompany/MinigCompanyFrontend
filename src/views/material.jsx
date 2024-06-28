@@ -16,15 +16,6 @@ const Material = ({route}) => {
   let detalleR;
   let categoriaR;
   let udmR;
-  if(route.params.materialR!=null){
-    esNuevo=false;
-    nombreR=route.params.materialR.nombreMaterial;
-    cantidadR=route.params.materialR.cantidad;
-    precioR=route.params.materialR.precio.$numberDecimal;
-    detalleR=route.params.materialR.detalle;
-    categoriaR=route.params.materialR.categoria;
-    udmR=route.params.materialR.udm;
-  }
   const fetchCategorias = async () => {
     const data = await dataCategoriesDro();
     if(data){
@@ -78,7 +69,9 @@ const Material = ({route}) => {
   
   let validar=()=>{
     if(esNuevo){
-      if(cantidad==null || Nombres==null || precio==null || detalle==null || categoria==null || textFechaIn== null || udm==null){
+      if(cantidad==null || Nombres==null || precio==null || detalle==null || categoria==null || textFechaIn== null || udm==null ||
+        cantidad=="" || Nombres=="" || precio=="" || detalle=="" || categoria=="" || textFechaIn== "" || udm==""
+      ){
         Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
         return;
       }else{
@@ -97,17 +90,6 @@ const Material = ({route}) => {
         setModalVisible(true);
       }
     }else{
-      let material = {
-        material_ID: route.params.materialR._id,
-        nombreMaterial:Nombres,
-        precio:parseFloat(precio),
-        cantidad:parseInt(cantidad),
-        udm:udm,
-        detalle:detalle,
-        categoria:categoria,
-        fecha:textFechaIn
-      }
-      updateMaterial(material);
       esNuevo=true;
       setTituloModal("Material Actualizada");
       setTextoModal("El material ha sido actualizado correctamente")
@@ -195,7 +177,7 @@ const Material = ({route}) => {
           }}
         />
         <View  style={[styles.VistaBtnSeguidos,{marginTop:30}]}>
-          <TouchableOpacity onPress={() => {navigation.navigate('Inventario');esNuevo=true;route.params.fnRefresh();}}
+          <TouchableOpacity onPress={() => {navigation.navigate('Inventario');esNuevo=true}}
               style={styles.BotonCancelar}>
               <Text style={[styles.colorTxtBtn,{color:"#000000"}]}>Cancelar</Text>
           </TouchableOpacity> 
@@ -222,8 +204,7 @@ const Material = ({route}) => {
             onPress={() => {
               setModalVisible(!modalVisible);
               navigation.navigate('Inventario');
-              esNuevo=true;
-              route.params.fnRefresh();}}>
+              esNuevo=true;}}>
             <Text style={styles.colorTxtBtn}>Entiendo</Text>
         </TouchableOpacity>
         </View>

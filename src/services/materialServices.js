@@ -86,3 +86,15 @@ export const deleteMaterial=(id)=>{
         console.log(id)
     });
 }
+
+export const allMaterialsHistorial=async()=>{
+    try {
+        const response = await axios.get(`${MATERIAL_URL}/Historial`);
+        //console.log('Datos recibidos:', response.data);
+        return response.data; // Retornamos los datos directamente
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        // Podrías retornar un valor especial como null o undefined para indicar que la solicitud falló
+        return null;
+    }
+}

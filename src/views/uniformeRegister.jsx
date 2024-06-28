@@ -1,11 +1,11 @@
 import react,  {useContext, useState,useEffect,useCallback} from "react";
-import { Text, View, TextInput, TouchableOpacity, Image, Modal,FlatList, Alert } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, Modal, Alert } from 'react-native';
 import { useNavigation,useFocusEffect } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Dropdown } from 'react-native-element-dropdown';
 import Icons from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
-import {saveUniform,updateUniform} from "../services/uniformServices";
+import {saveUniform} from "../services/uniformServices";
 import {dataCategoriesDroUniforme} from "../services/categoryServices";
 import {dataUDMDroUniform} from "../services/udmServices";
 let esNuevo=true;
@@ -15,14 +15,6 @@ const EntradaUniforme = ({route}) => {
   let detalleR;
   let categoriaR;
   let udmR;
-  if(route.params.uniformeR!=null){
-    esNuevo=false;
-    nombreR=route.params.uniformeR.nombreUniforme;
-    cantidadR=route.params.uniformeR.cantidad;
-    detalleR=route.params.uniformeR.detalle;
-    categoriaR=route.params.uniformeR.categoria;
-    udmR=route.params.uniformeR.udm;
-  }
   const fetchCategorias = async () => {
     const data = await dataCategoriesDroUniforme();
     if(data){
@@ -74,7 +66,9 @@ const EntradaUniforme = ({route}) => {
   //Guardar Uniforme
   let validar=()=>{
     if(esNuevo){
-      if(cantidad==null || Nombre==null || detalle==null || categoria==null || textFechaIn== null || udm==null){
+      if(cantidad==null || Nombre==null || detalle==null || categoria==null || textFechaIn== null || udm==null ||
+        cantidad=="" || Nombre=="" || detalle=="" || categoria=="" || textFechaIn== "" || udm==""
+      ){
         Alert.alert("INFO.","Los campos que desea ingresar estan en blanco");
         return;
       }else{
@@ -92,16 +86,6 @@ const EntradaUniforme = ({route}) => {
         setModalVisible(true);
       }
     }else{
-      let uniforme = {
-        uniforme_ID:route.params.uniformeR._id,
-        nombreUniforme:Nombre,
-        cantidad:parseInt(cantidad),
-        udm:udm,
-        detalle:detalle,
-        categoria:categoria,
-        fecha:textFechaIn,
-      }
-      updateUniform(uniforme);
       esNuevo=true;
       setTituloModal("Prenda-Uniforme Actualizada");
       setTextoModal("La prenda ha sido actualizada correctamente")
@@ -212,8 +196,7 @@ const EntradaUniforme = ({route}) => {
             onPress={() => {
               setModalVisible(!modalVisible);
               esNuevo=true;
-              navigation.navigate('Uniformes');
-              route.params.fnRefresh();}}>
+              navigation.navigate('Uniformes');}}>
             <Text style={styles.colorTxtBtn}>Entiendo</Text>
         </TouchableOpacity>
         </View>

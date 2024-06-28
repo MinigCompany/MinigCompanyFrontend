@@ -106,7 +106,7 @@ const Records = () =>{
                         <Text style={styles.txtInventario}>Registros</Text>
                     </View>
                     <View style={styles.VistaCodigo}>
-                        <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50}]} onPress={() => navigation.navigate('NewMaterialSalida',{fnRefresh:refreshList})}>
+                        <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50}]} onPress={() => navigation.navigate('NewMaterialSalida')}>
                             <View style={styles.contenedorTextoSalida}>
                                 <Text style={styles.txtNewMaterial}>Salidas</Text>
                             </View>

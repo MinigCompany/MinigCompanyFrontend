@@ -15,6 +15,9 @@ import MaterialSalidaScreen from "./src/views/salidaMaterial";
 import MaterialEntradaScreen from "./src/views/entradaMaterial";
 import UniformRegisterScreen from "./src/views/uniformeRegister";
 import UniformSalidaScreen from "./src/views/salidaUniform";
+import TrabajadorScreen from "./src/views/trabajador";
+import HistorialScreen from "./src/views/historial";
+import PerfilScreen from "./src/views/perfil";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Navigation = () => {
@@ -32,10 +35,12 @@ const Navigation = () => {
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
         <Stack.Screen name="Register" component={RegisScreen} options={{headerShown:false}}/>
 
-        <Stack.Screen name="Inventario" component={TabNavigator} initialParams={{ screen: "Inventario" }} options={{headerShown:false}}/>
+        <Stack.Screen name="InventarioStack" component={TabNavigator} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterial" component={MaterialScreen} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterialSalida" component={MaterialSalidaScreen} options={{headerShown:false}}/>
         <Stack.Screen name="NewMaterialEntrada" component={MaterialEntradaScreen} options={{headerShown:false}}/>
+
+        <Stack.Screen name="NewTrabajador" component={TrabajadorScreen} options={{headerShown:false}}/>
 
         <Stack.Screen name="NewUniform" component={UniformRegisterScreen} options={{headerShown:false}}/>
         <Stack.Screen name="NewUniformSalida" component={UniformSalidaScreen} options={{headerShown:false}}/>
@@ -65,9 +70,13 @@ function TabNavigator() {
         tabBarIcon: ({ focused, color, size }) => (
           <Icon name="skin" type='antdesign' size={25} color="#000000" />
         ),}}/>
-      <Tab.Screen name="Perfil" component={RecordsScreen} options={{headerShown:false, 
+      <Tab.Screen name="Historial" component={HistorialScreen} options={{headerShown:false, 
         tabBarIcon: ({ focused, color, size }) => (
-          <Icon name="user" type='font-awesome' size={25} color="#000000" />
+          <Icon name="archive" type='font-awesome' size={25} color="#000000" />
+        ),}}/>
+      <Tab.Screen name="Perfil" component={PerfilScreen} options={{headerShown:false, 
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon name="user-o" type='font-awesome' size={25} color="#000000" />
         ),}}/>
     </Tab.Navigator>
   );
