@@ -9,7 +9,11 @@ const Login = () => {
     const [username, setUsername] = useState(null);
     const [password, setPassword] = useState(null);
     const [check1, setCheck1] = useState(false);
-    const {loginM} = useContext(AuthContext);
+    const {loginM,checkUserAuthentication} = useContext(AuthContext);
+
+    useEffect(() => {
+		checkUserAuthentication();
+	}, []);
   	return (
       <View style={styles.container}>
       <View>

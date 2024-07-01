@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Dropdown } from 'react-native-element-dropdown';
 import Icons from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
-import {saveUniform} from "../services/uniformServices";
+import {saveUniform,updateUniform} from "../services/uniformServices";
 import {dataCategoriesDroUniforme} from "../services/categoryServices";
 import {dataUDMDroUniform} from "../services/udmServices";
 let esNuevo=true;
@@ -15,6 +15,14 @@ const EntradaUniforme = ({route}) => {
   let detalleR;
   let categoriaR;
   let udmR;
+  if(route.params.uniformeR!=null){
+    esNuevo=false;
+    nombreR=route.params.uniformeR.nombreUniforme;
+    cantidadR=route.params.uniformeR.saldo;
+    detalleR=route.params.uniformeR.detalle;
+    categoriaR=route.params.uniformeR.categoria;
+    udmR=route.params.uniformeR.udm;
+  }
   const fetchCategorias = async () => {
     const data = await dataCategoriesDroUniforme();
     if(data){
@@ -86,6 +94,16 @@ const EntradaUniforme = ({route}) => {
         setModalVisible(true);
       }
     }else{
+      let uniforme = {
+        uniforme_ID:route.params.uniformeR._id,
+        nombreUniforme:Nombre,
+        cantidad:parseInt(cantidad),
+        udm:udm,
+        detalle:detalle,
+        categoria:categoria,
+        fecha:textFechaIn,
+      }
+      updateUniform(uniforme);
       esNuevo=true;
       setTituloModal("Prenda-Uniforme Actualizada");
       setTextoModal("La prenda ha sido actualizada correctamente")

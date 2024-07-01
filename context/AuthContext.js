@@ -7,6 +7,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import * as RootNavigation from '../RootNavigation';
 export const AuthContext = createContext();
 
+let valor=true;
 function useCounter() {
    return console.log("mi token");
  }
@@ -109,11 +110,15 @@ export const AuthProvider = ({children}) => {
         });
     }
     
-    const checkUserAuthentication = async () =>{   
+    const checkUserAuthentication = async () =>{ 
       try {
         const userData = await AsyncStorage.getItem('userData');
         if (userData) {
             //console.log('Usuario autenticado');
+            if(valor){
+              RootNavigation.navigate('InventarioStack');
+              valor=false;
+            }
         } else {
             RootNavigation.navigate('Login');
             //console.log('Usuario no autenticado');
@@ -129,6 +134,7 @@ export const AuthProvider = ({children}) => {
       try {
         await AsyncStorage.removeItem('userData');
         //RootNavigation.navigate('Login');
+        valor=true;
         console.log('Cierre de sesión exitoso');
       } catch (error) {
         console.error('Error al cerrar sesión:', error);

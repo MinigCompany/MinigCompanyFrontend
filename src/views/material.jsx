@@ -16,6 +16,15 @@ const Material = ({route}) => {
   let detalleR;
   let categoriaR;
   let udmR;
+  if(route.params.materialR!=null){
+    esNuevo=false;
+    nombreR=route.params.materialR.nombreMaterial;
+    cantidadR=route.params.materialR.saldo;
+    precioR=route.params.materialR.precio.$numberDecimal;
+    detalleR=route.params.materialR.detalle;
+    categoriaR=route.params.materialR.categoria;
+    udmR=route.params.materialR.udm;
+  }
   const fetchCategorias = async () => {
     const data = await dataCategoriesDro();
     if(data){
@@ -90,6 +99,17 @@ const Material = ({route}) => {
         setModalVisible(true);
       }
     }else{
+      let material = {
+        material_ID: route.params.materialR._id,
+        nombreMaterial:Nombres,
+        precio:parseFloat(precio),
+        cantidad:parseInt(cantidad),
+        udm:udm,
+        detalle:detalle,
+        categoria:categoria,
+        fecha:textFechaIn
+      }
+      updateMaterial(material);
       esNuevo=true;
       setTituloModal("Material Actualizada");
       setTextoModal("El material ha sido actualizado correctamente")

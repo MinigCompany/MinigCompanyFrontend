@@ -104,7 +104,7 @@ const Uniforms = () =>{
                         uniformAux = uniforme;
                     }}
                     style={[styles.colorBtn,{backgroundColor:"#FFFFFF",borderRadius:5,borderWidth:1,padding:2}]}>
-                        <Icon name="delete" type="antdesign" size={25} color="red"/>
+                        <Icon name="edit" type="antdesign" size={25} color="#FF8400"/>
                     </TouchableOpacity> 
                 </View>
             </View>
@@ -149,7 +149,7 @@ const Uniforms = () =>{
                     </View>
                     <View style={styles.VistaCodigo}>
                         <TouchableOpacity style={[styles.VistaNewmaterial,{marginRight:50,backgroundColor:"#0578FF"}]} 
-                        onPress={() => navigation.navigate('NewUniform')}>
+                        onPress={() => navigation.navigate('NewUniform',{uniformeR:uniformAux})}>
                             <View style={styles.contenedorTextoSalida}>
                                 <Text style={[styles.txtNewMaterial,{color:"#FFFFFF"}]}>Nuevo</Text>
                             </View>
@@ -245,35 +245,40 @@ const Uniforms = () =>{
                     </View>
             </View>
             <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                Alert.alert('Modal se cerro.');
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
                 setModalVisible(!modalVisible);
-            }}>
+                }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={[styles.modalText,{color:"red",}]}>Eliminar el Uniforme</Text>
-                        <Icon  name='delete' color ="#FC2323" style={styles.circleIconCheck}/>
-                        <Text style={styles.textoSecundario}>Esta seguro que desea eliminar el Uniforme </Text>
-                        <View style={[{flexDirection:"row",}]}>
+                        <Text style={styles.modalText}>Que desea hacer?</Text>
+                        <View style={{flexDirection:"row",alignItems:"stretch", margin:20}}>
                             <TouchableOpacity
-                                style={[styles.button, styles.buttonClose,{backgroundColor:"#FC2323",marginTop:10}]}
+                                style={[styles.button,{marginRight:20, backgroundColor:"#05AB48", paddingHorizontal:30}]}
+                                onPress={() => {
+                                    setModalVisible(!modalVisible);
+                                    navigation.navigate('NewUniform',{uniformeR:uniformAux});
+                                }}>
+                                <Text style={styles.textStyle}>Editar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.button,styles.buttonClose,]}
                                 onPress={() => {
                                     setModalVisible(!modalVisible);
                                     deleteUniform(uniformAux._id);
                                     fetchUniforme();
                                 }}>
-                                <Text style={styles.colorTxtBtn}>Eliminar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.button, styles.buttonClose,{marginLeft:5,marginTop:10}]}
-                                onPress={() => {
-                                setModalVisible(!modalVisible)}}>
-                                <Text style={styles.colorTxtBtn}>Cancelar</Text>
+                                <Text style={styles.textStyle}>Eliminar</Text>
                             </TouchableOpacity>
                         </View>
+                        <TouchableOpacity
+                                style={[styles.button,{backgroundColor:"#48A1D4"}]}
+                                onPress={() => {setModalVisible(!modalVisible);refreshList();}}>
+                                <Text style={styles.textStyle}>Cancelar</Text>
+                            </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
