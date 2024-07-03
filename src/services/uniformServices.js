@@ -83,3 +83,17 @@ export const allUniformsHistorial=async()=>{
         return null;
     }
 }
+export const dataUniformHistorialDro=async()=>{
+    try {
+        let data =[];
+        const response = await allUniformsHistorial();
+        for(let i=0;i < response.Historial.length;i++){
+            let valor = { label: response.Historial[i].uniforme.nombreUniforme, value: response.Historial[i]._id }
+            data.push(valor);
+        }
+        return data;
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        return null;
+    }
+}

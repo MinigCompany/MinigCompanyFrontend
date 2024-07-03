@@ -98,3 +98,17 @@ export const allMaterialsHistorial=async()=>{
         return null;
     }
 }
+export const dataMaterialHistorialDro=async()=>{
+    try {
+        let data =[];
+        const response = await allMaterialsHistorial();
+        for(let i=0;i < response.Historial.length;i++){
+            let valor = { label: response.Historial[i].material.nombreMaterial, value: response.Historial[i]._id }
+            data.push(valor);
+        }
+        return data;
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        return null;
+    }
+}

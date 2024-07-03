@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/Logo.png",
         "backgroundColor": "#A35709"
-      }
+      },
+      "package": "com.ccmacas.minigCompany"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c02dffae-a9a8-4028-ba13-053348f22e93"
+      }
     }
   }
 }

@@ -4,37 +4,94 @@ import { Text, View, TouchableOpacity, Image, Modal,FlatList } from 'react-nativ
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import styles from '../styles/stylesInventory';
 import { Dropdown } from 'react-native-element-dropdown';
-import {allMaterialsHistorial,allMaterialsCategoria} from "../services/materialServices";
-import {allUniformsHistorial} from "../services/uniformServices";
+import {allMaterialsHistorial,dataMaterialHistorialDro} from "../services/materialServices";
+import {allUniformsHistorial,dataUniformHistorialDro} from "../services/uniformServices";
 import { Icon } from 'react-native-elements';
-import {dataCategoriesDro} from "../services/categoryServices";
+import {dataInputDroHistorialUniform,dataInputDroHistorialMaterial,allOutputsHistorialUniform,allInputsHistorialMaterial, allOutputsHistorialMaterial} from "../services/InputServices";
 const Inventory = ({route}) => {
     const navigation = useNavigation();
     const [showUniformes, setShowUniformes] = useState(true);
+    const [show1, setShow1] = useState(true);
+    const [show2, setShow2] = useState(true);
     const [time, setTime] = useState([]);
     const [materials, setMaterials] = useState([]);
     const [uniformes, setUniformes] = useState([]);
     const [nombreUser, setNombreUser] = useState();
     const [ApellidoUser, setApellidoUser] = useState();
-    const [allCategorias, setAllCategorias] = useState([]);
+    const [uniformesDro, setUniformesDro] = useState([]);
     //
+    const [inputs, setInputs] = useState([]);
+    const [outputs, setOutputs] = useState([]);
+    const [valueEnt, setValueEnt] = useState();
     const [value, setValue] = useState(null);
+    const [dropdownEnabled, setDropdownEnabled] = useState(true);
     const [isFocus, setIsFocus] = useState(false);
+    const [isFocusEnt, setIsFocusEnt] = useState(false);
     
+    const [materialDro, setMaterialDro] = useState([]);
+    const [inputsMaterial, setInputsMaterial] = useState([]);
+    const [outputsMaterial, setOutputsMaterial] = useState([]);
+    const [valueEntMaterial, setValueEntMaterial] = useState();
+    const [valueMaterial, setValueMaterial] = useState(null);
+    const [dropdownEnabledMate, setDropdownEnabledMate] = useState(true);
+    const [isFocusEntMate, setIsFocusEntMate] = useState(false);
     useFocusEffect(
         useCallback(() => {
+            fetchMaterialDro();
             fetchMaterials();
-            fetchCategorias();
+            fetchUniformeDro();
             fetchUniforme();
             getUser();
         }, [])
     );
-    const fetchCategorias = async () => {
-        const data = await dataCategoriesDro();
+    const fetchUniformeDro = async () => {
+        const data = await dataUniformHistorialDro();
         if(data){
-          setAllCategorias(data);
+            setUniformesDro(data);
         }
-      };
+    };
+    const fetchSalidas=async(valor)=>{
+        setValueEnt(valor);
+        const data = await allOutputsHistorialUniform(value,valor);
+        //console.log(data.salidas);
+        setOutputs([])
+        if(data){
+            setOutputs(data.salidas);
+        }
+    };
+    const fetchSalidasMaterial=async(valor)=>{
+        setValueEntMaterial(valor);
+        const data = await allOutputsHistorialMaterial(valueMaterial,valor);
+        //console.log(data.salidas);
+        setOutputsMaterial([])
+        if(data){
+            setOutputsMaterial(data.salidas);
+        }
+    };
+    const fetchMaterialDro = async () => {
+        const data = await dataMaterialHistorialDro();
+        if(data){
+            setMaterialDro(data);
+        }
+    };
+    const fetchEntradas=async(valor)=>{
+        setValue(valor);
+        console.log(value);
+        const data = await dataInputDroHistorialUniform(valor);
+        setValueEnt();
+        if(data){
+            setInputs(data);
+        }
+    };
+    const fetchEntradasMaterial=async(valor)=>{
+        setValueMaterial(valor);
+        console.log(value);
+        const data = await dataInputDroHistorialMaterial(valor);
+        setValueEntMaterial();
+        if(data){
+            setInputsMaterial(data);
+        }
+    };
     const fetchMaterials = async () => {
         const data = await allMaterialsHistorial();
         if (data) {
@@ -47,13 +104,6 @@ const Inventory = ({route}) => {
             setUniformes(data.Historial);
         }
     }
-    const fetchMaterialCategory = async (categoria) => {
-        setMaterials([]);
-        const data = await allMaterialsCategoria(categoria);
-        if(data){
-            setMaterials(data.Material);
-        }
-    };
     const getUser = async () =>{   
         try {
           const userData = await AsyncStorage.getItem('userData');
@@ -117,6 +167,34 @@ const Inventory = ({route}) => {
             </View>
         );
     }
+    const ItemSalidas=({salida})=>{
+        return(
+            <View  style={[styles.VistaMateriales,{flex:1,alignItems:"center"}]}>
+                <View style={[styles.Separador,{flex:1}]}>
+                    <Image style={styles.imageOutPut} source={require('../../assets/output.png')} />
+                </View>
+                <View style={[styles.Separador,{flex:1,alignItems:"center"}]}>
+                    <Image style={{width: 5,height: 80,}} source={require('../../assets/Line.png')} />
+                </View>
+                <View style={[styles.Separador,{flex:5}]}>
+                    <Text style={styles.tituloMaterial}>SALIDA DE UNIFORMES</Text>
+                    <Text style={styles.subtitulo}>{salida.observacion} </Text>
+                    <View style={styles.VistaCodigo}>
+                        <View style={styles.VistaCodigo}>
+                            <Text style={styles.subtitulo}>Cantidad de material: </Text>
+                            <Text style={styles.subtitulo}>{salida.cantidad} unidades</Text>
+                        </View>
+                    </View>
+                    <View style={styles.VistaCodigo}>
+                        <View style={styles.VistaCodigo}>
+                            <Text style={styles.subtitulo}>Para: </Text>
+                            <Text style={styles.subtitulo}>{salida.nombreTrabajador}</Text>
+                        </View>
+                    </View>
+                </View >
+            </View>
+        );
+    }
     return(
         <View style={styles.container}>
             <View style={[styles.mainContainer,{flex: 1 }]}>
@@ -147,51 +225,162 @@ const Inventory = ({route}) => {
                     </View>
                     
                     <Text style={styles.txtFiltro}>Filtros</Text>
-                    <View style={styles.VistaInventario}>
-                        <Dropdown
-                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                        placeholderStyle={styles.placeholderStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        inputSearchStyle={styles.inputSearchStyle}
-                        iconStyle={styles.iconStyle}
-                        data={allCategorias}
-                        search
-                        maxHeight={300}
-                        labelField="label"
-                        valueField="value"
-                        placeholder={!isFocus ? 'Categoria' : '...'}
-                        searchPlaceholder="Buscar..."
-                        value={value}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                        onChange={item => {
-                            setValue(item.value);
-                            setIsFocus(false);
-                            fetchMaterialCategory(item.value);                            
-                        }}
-                        />
-                    </View>
-                    
+                    {showUniformes ?(
+                            <View>
+                                <TouchableOpacity style={[styles.VistaMaterial]} onPress={() => setShow1(!show1)}>
+                                            <Text style={styles.txtNewMaterial}>{show1 ? 'Cambiar vista Salidas' : 'Cambiar vista Material'}</Text>
+                                    </TouchableOpacity>
+                                    <View style={styles.VistaInventario}>
+                                    <Dropdown
+                                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                                        placeholderStyle={styles.placeholderStyle}
+                                        selectedTextStyle={styles.selectedTextStyle}
+                                        inputSearchStyle={styles.inputSearchStyle}
+                                        iconStyle={styles.iconStyle}
+                                        data={materialDro}
+                                        search
+                                        maxHeight={300}
+                                        labelField="label"
+                                        valueField="value"
+                                        placeholder={!isFocus ? 'Materiales' : '...'}
+                                        searchPlaceholder="Buscar..."
+                                        value={valueMaterial}
+                                        onFocus={() => setIsFocus(true)}
+                                        onBlur={() => setIsFocus(false)}
+                                        onChange={item => {
+                                            setValueMaterial(item.value);
+                                            setIsFocus(false);
+                                            fetchEntradasMaterial(item.value);
+                                            console.log(item.label+" "+item.value);
+                                            setDropdownEnabledMate(false);
+                                        }}
+                                        />
+                                        <Dropdown
+                                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                                        placeholderStyle={styles.placeholderStyle}
+                                        selectedTextStyle={styles.selectedTextStyle}
+                                        inputSearchStyle={styles.inputSearchStyle}
+                                        iconStyle={styles.iconStyle}
+                                        data={inputsMaterial}
+                                        search
+                                        maxHeight={300}
+                                        labelField="label"
+                                        valueField="value"
+                                        placeholder={!setIsFocusEntMate ? 'Entrada (fecha)' : '...'}
+                                        searchPlaceholder="Buscar..."
+                                        value={valueEntMaterial}
+                                        onFocus={() => setIsFocusEntMate(true)}
+                                        onBlur={() => setIsFocusEntMate(false)}
+                                        onChange={item => {
+                                            setValueEntMaterial(item.value);
+                                            setIsFocusEntMate(false);
+                                            fetchSalidasMaterial(item.value);
+                                        }}
+                                        disable={dropdownEnabledMate}
+                                        />
+                                    </View>
+                            </View>
+                            ):(
+                                <View>
+                                <TouchableOpacity style={[styles.VistaMaterial]} onPress={() => setShow2(!show2)}>
+                                            <Text style={styles.txtNewMaterial}>{show2 ? 'Cambiar vista Salidas' : 'Cambiar vista Uniformes'}</Text>
+                                    </TouchableOpacity>
+                                    <View style={styles.VistaInventario}>
+                                    <Dropdown
+                                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                                        placeholderStyle={styles.placeholderStyle}
+                                        selectedTextStyle={styles.selectedTextStyle}
+                                        inputSearchStyle={styles.inputSearchStyle}
+                                        iconStyle={styles.iconStyle}
+                                        data={uniformesDro}
+                                        search
+                                        maxHeight={300}
+                                        labelField="label"
+                                        valueField="value"
+                                        placeholder={!isFocus ? 'Uniformes' : '...'}
+                                        searchPlaceholder="Buscar..."
+                                        value={value}
+                                        onFocus={() => setIsFocus(true)}
+                                        onBlur={() => setIsFocus(false)}
+                                        onChange={item => {
+                                            setValue(item.value);
+                                            setIsFocus(false);
+                                            fetchEntradas(item.value);
+                                            console.log(item.label+" "+item.value);
+                                            setDropdownEnabled(false);
+                                        }}
+                                        />
+                                        <Dropdown
+                                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                                        placeholderStyle={styles.placeholderStyle}
+                                        selectedTextStyle={styles.selectedTextStyle}
+                                        inputSearchStyle={styles.inputSearchStyle}
+                                        iconStyle={styles.iconStyle}
+                                        data={inputs}
+                                        search
+                                        maxHeight={300}
+                                        labelField="label"
+                                        valueField="value"
+                                        placeholder={!isFocusEnt ? 'Entrada (fecha)' : '...'}
+                                        searchPlaceholder="Buscar..."
+                                        value={valueEnt}
+                                        onFocus={() => setIsFocusEnt(true)}
+                                        onBlur={() => setIsFocusEnt(false)}
+                                        onChange={item => {
+                                            setValueEnt(item.value);
+                                            setIsFocusEnt(false);
+                                            fetchSalidas(item.value);
+                                        }}
+                                        disable={dropdownEnabled}
+                                        />
+                                    </View>
+                            </View>
+                            )
+                        }
                     <View  style={{ flex: 1 }}>
                         <Text style={styles.txtFiltro}>{showUniformes ? 'Materiales' : 'Uniformes'}</Text>
                         {showUniformes ?(
-                            <FlatList
-                                data={materials}
-                                renderItem={({item})=>{
-                                    return <ItemMaterials material={item}/>
-                                }}
-                                keyExtractor={(item)=>{return item._id}}
-                                extraData={time}
-                            />
+                            show1 ? (
+                                <FlatList
+                                    data={materials}
+                                    renderItem={({item})=>{
+                                        return <ItemMaterials material={item}/>
+                                    }}
+                                    keyExtractor={(item)=>{return item._id}}
+                                    extraData={time}
+                                />
+                              ) : (
+                                <FlatList
+                                    data={outputsMaterial}
+                                    renderItem={({item})=>{
+                                        return <ItemSalidas salida={item}/>
+                                    }}
+                                    keyExtractor={(item)=>{return item._id}}
+                                    extraData={time}
+                                />
+                              )
                             ):(
-                            <FlatList
-                                data={uniformes}
-                                renderItem={({item})=>{
-                                    return <ItemUniforms uniforme={item}/>
-                                }}
-                                keyExtractor={(item)=>{return item._id}}
-                                extraData={time}
-                            />
+                                show2 ? (
+                                    <FlatList
+                                        data={uniformes}
+                                        renderItem={({item})=>{
+                                            return <ItemUniforms uniforme={item}/>
+                                        }}
+                                        keyExtractor={(item)=>{return item._id}}
+                                        extraData={time}
+                                    />
+                                  ) : (
+                                    <FlatList
+                                        data={outputs}
+                                        renderItem={({item})=>{
+                                            return <ItemSalidas salida={item}/>
+                                        }}
+                                        keyExtractor={(item)=>{return item._id}}
+                                        extraData={time}
+                                    />
+                                  )
+                          
+                            
                             )
                         }
                         
