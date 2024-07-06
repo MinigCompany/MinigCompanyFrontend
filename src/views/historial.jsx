@@ -256,7 +256,7 @@ const Inventory = ({route}) => {
                                         }}
                                         />
                                         <Dropdown
-                                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                                        style={[styles.dropdown, isFocusEntMate && { borderColor: 'blue' }]}
                                         placeholderStyle={styles.placeholderStyle}
                                         selectedTextStyle={styles.selectedTextStyle}
                                         inputSearchStyle={styles.inputSearchStyle}
@@ -311,7 +311,7 @@ const Inventory = ({route}) => {
                                         }}
                                         />
                                         <Dropdown
-                                        style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                                        style={[styles.dropdown, isFocusEnt && { borderColor: 'blue' }]}
                                         placeholderStyle={styles.placeholderStyle}
                                         selectedTextStyle={styles.selectedTextStyle}
                                         inputSearchStyle={styles.inputSearchStyle}

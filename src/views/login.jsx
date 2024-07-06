@@ -36,7 +36,7 @@ const Login = () => {
                     onChangeText={text => setPassword(text)}
                     />
             </View>
-            <TouchableOpacity onPress={() =>{setUsername("");setPassword("");loginM(username, password)}}
+            <TouchableOpacity onPress={() =>{;loginM(username, password)}}
                 style={styles.colorBtn}>
             <Text style={styles.colorTxtBtn}>Iniciar Sesión</Text>
             </TouchableOpacity>
