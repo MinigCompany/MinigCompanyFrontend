@@ -136,6 +136,10 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
     },
+    imageMaterial: {
+      width: 30,
+      height: 30,
+    },
     circleIconCheck:{
       backgroundColor:"#FC23234D",
       color:"#FC2323",

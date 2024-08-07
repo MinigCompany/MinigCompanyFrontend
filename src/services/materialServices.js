@@ -44,6 +44,20 @@ export const dataMaterialDro=async()=>{
         return null;
     }
 }
+export const dataMaterialDroCantidad=async()=>{
+    try {
+        let data =[];
+        const response = await allMaterials();
+        for(let i=0;i < response.Material.length;i++){
+            let valor = { label: response.Material[i].nombreMaterial+" - Cant: "+response.Material[i].saldo, value: response.Material[i]._id }
+            data.push(valor);
+        }
+        return data;
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        return null;
+    }
+}
 export const allMaterialsCategoria=async(cadena)=>{
     try {
         const response = await axios.get(`${MATERIAL_URL}/Materiales/MaterialCategoria/`+cadena);

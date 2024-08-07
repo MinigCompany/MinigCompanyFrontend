@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
 import { Dropdown } from 'react-native-element-dropdown';
-import {dataUniformDro} from "../services/uniformServices";
+import {dataUniformDroCantidad} from "../services/uniformServices";
 import {saveSalidaUniform} from "../services/InputServices";
 import {dataUDMDro} from "../services/udmServices"
 import {dataTrabajadoresDro} from '../services/trabajadoresServices';
@@ -45,7 +45,7 @@ const SalidaUniformes = ({route}) => {
     }
   };
   const fetchUniforms = async () => {
-    const data = await dataUniformDro();
+    const data = await dataUniformDroCantidad();
     if(data){
         setUniforms(data);
     }

@@ -43,6 +43,20 @@ export const dataUniformDro=async()=>{
         return null;
     }
 }
+export const dataUniformDroCantidad=async()=>{
+    try {
+        let data =[];
+        const response = await allUniforms();
+        for(let i=0;i < response.Uniformes.length;i++){
+            let valor = { label: response.Uniformes[i].nombreUniforme+" - Cant: "+response.Uniformes[i].saldo, value: response.Uniformes[i]._id }
+            data.push(valor);
+        }
+        return data;
+    } catch (error) {
+        console.error('Error al realizar la solicitud:', error);
+        return null;
+    }
+}
 export const updateUniform=(uniforme)=>{
     axios.put(`${UNIFORM_URL}/Uniformes/UpdateUniforme`,{
         uniforme_ID:uniforme.uniforme_ID,

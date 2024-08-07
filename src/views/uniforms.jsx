@@ -82,7 +82,7 @@ const Uniforms = () =>{
         return (
             <View  style={[styles.VistaMateriales,{borderColor}]}>
                 <View style={[styles.Separador,{flex: 1, alignItems:"flex-start", justifyContent:"center"}]}>
-                    <Icon name="skin"  type="antdesign" size={50} color="#FF8400" />
+                <Image style={styles.imageMaterial} source={getImageForUniform(uniforme.nombreUniforme)} />
                 </View>
                 <View style={[styles.Separador,{flex: 4 }]}>
                     <Text style={styles.tituloMaterial}>{uniforme.nombreUniforme}</Text>
@@ -138,6 +138,19 @@ const Uniforms = () =>{
             </View>
         );
     }
+    const getImageForUniform = (uniformName) => {
+        var arrayDeCadenas = uniformName.split(" ");
+        const imageMap = {
+          "guantes": require('../../assets/uniforme/guantes.png'),
+          "chaleco": require('../../assets/uniforme/chaleco.png'),
+          "botas": require('../../assets/uniforme/botas.png'),
+          "casco": require('../../assets/uniforme/casco.png'),
+          "camiseta": require('../../assets/uniforme/camiseta.png'),
+          "pantalon": require('../../assets/uniforme/pantalon.png'),
+          "mascarilla": require('../../assets/uniforme/mascarilla.png'),
+        };
+        return imageMap[arrayDeCadenas[0].toLowerCase()] || require('../../assets/uniforme/chaleco.png');
+    };  
     return(
         <View style={styles.container}>
             <View style={[styles.mainContainer,{flex: 1 }]}>

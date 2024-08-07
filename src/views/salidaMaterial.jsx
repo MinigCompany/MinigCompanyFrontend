@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/Fontisto';
 import styles from '../styles/stylesFormularios';
 import { Dropdown } from 'react-native-element-dropdown';
-import {dataMaterialDro} from "../services/materialServices";
+import {dataMaterialDroCantidad} from "../services/materialServices";
 import {saveSalida} from "../services/InputServices";
 import {dataUDMDro} from "../services/udmServices";
 import {dataTrabajadoresDro} from '../services/trabajadoresServices';
@@ -45,7 +45,7 @@ const SalidaMaterial = ({route}) => {
     }
   };
   const fetchMaterial = async () => {
-    const data = await dataMaterialDro();
+    const data = await dataMaterialDroCantidad();
     if(data){
         setMaterials(data);
     }

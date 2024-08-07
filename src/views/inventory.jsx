@@ -61,14 +61,32 @@ const Inventory = ({route}) => {
     }
     const refreshList=()=>{
         setTime(new Date().getTime());
-    }    
+    }
+    const getImageForMaterial = (materialName) => {
+        var arrayDeCadenas = materialName.split(" ");
+        const imageMap = {
+          "taladro": require('../../assets/taladro.png'),
+          "cinta": require('../../assets/cinta.png'),
+          "enchufe": require('../../assets/enchufe.png'),
+          "toma corriente": require('../../assets/toma corriente.png'),
+          "cable": require('../../assets/cable.png'),
+          "pala": require('../../assets/pala.png'),
+          "clavo": require('../../assets/clavo.png'),
+          "machete": require('../../assets/machete.png'),
+          "pinza": require('../../assets/pinza.png'),
+          "martillo": require('../../assets/martillo.png'),
+          "dinamita": require('../../assets/dinamita.png'),
+          "barilla": require('../../assets/varilla.png'),
+        };
+        return imageMap[arrayDeCadenas[0].toLowerCase()] || require('../../assets/tornillo.png');
+    };  
     const ItemMaterials=({material})=>{
         const borderColor = material.saldo < 5 ? 'red' : 'green';
         return (
             <View  style={[styles.VistaMateriales,{borderColor}]}>
                 <View style={[styles.Separador,{flex: 1,alignItems:"flex-start", justifyContent:"center" }]}>
                     <Text style={styles.txtFiltro}>$ {material.precio.$numberDecimal}</Text> 
-                    <Icon name="paperclip"  type="antdesign" size={25} color="#FF8400" />
+                    <Image style={styles.imageMaterial} source={getImageForMaterial(material.nombreMaterial)} />
                 </View>
                 <View style={[styles.Separador,{flex: 4 }]}>
                     <Text style={styles.tituloMaterial}>{material.nombreMaterial}</Text>
