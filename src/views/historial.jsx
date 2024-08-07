@@ -125,7 +125,7 @@ const Inventory = ({route}) => {
             <View  style={[styles.VistaMateriales]}>
                 <View style={[styles.Separador,{flex: 1,alignItems:"flex-start", justifyContent:"center" }]}>
                     <Text style={styles.txtFiltro}>$ {material.material.precio.$numberDecimal}</Text> 
-                    <Icon name="paperclip"  type="antdesign" size={25} color="#FF8400" />
+                    <Image style={styles.image} source={getImageForMaterial(material.material.nombreMaterial)} />
                 </View>
                 <View style={[styles.Separador,{flex: 4 }]}>
                     <Text style={styles.tituloMaterial}>{material.material.nombreMaterial}</Text>
@@ -148,7 +148,7 @@ const Inventory = ({route}) => {
         return (
             <View  style={[styles.VistaMateriales]}>
                 <View style={[styles.Separador,{flex: 1, alignItems:"flex-start", justifyContent:"center"}]}>
-                    <Icon name="skin"  type="antdesign" size={50} color="#FF8400" />
+                    <Image style={styles.imageMaterial} source={getImageForUniform(uniforme.uniforme.nombreUniforme)} />
                 </View>
                 <View style={[styles.Separador,{flex: 4 }]}>
                     <Text style={styles.tituloMaterial}>{uniforme.uniforme.nombreUniforme}</Text>
@@ -195,6 +195,37 @@ const Inventory = ({route}) => {
             </View>
         );
     }
+    const getImageForMaterial = (materialName) => {
+        var arrayDeCadenas = materialName.split(" ");
+        const imageMap = {
+          "taladro": require('../../assets/taladro.png'),
+          "cinta": require('../../assets/cinta.png'),
+          "enchufe": require('../../assets/enchufe.png'),
+          "toma corriente": require('../../assets/toma corriente.png'),
+          "cable": require('../../assets/cable.png'),
+          "pala": require('../../assets/pala.png'),
+          "clavo": require('../../assets/clavo.png'),
+          "machete": require('../../assets/machete.png'),
+          "pinza": require('../../assets/pinza.png'),
+          "martillo": require('../../assets/martillo.png'),
+          "dinamita": require('../../assets/dinamita.png'),
+          "barilla": require('../../assets/varilla.png'),
+        };
+        return imageMap[arrayDeCadenas[0].toLowerCase()] || require('../../assets/tornillo.png');
+    };
+    const getImageForUniform = (uniformName) => {
+        var arrayDeCadenas = uniformName.split(" ");
+        const imageMap = {
+          "guantes": require('../../assets/uniforme/guantes.png'),
+          "chaleco": require('../../assets/uniforme/chaleco.png'),
+          "botas": require('../../assets/uniforme/botas.png'),
+          "casco": require('../../assets/uniforme/casco.png'),
+          "camiseta": require('../../assets/uniforme/camiseta.png'),
+          "pantalon": require('../../assets/uniforme/pantalon.png'),
+          "mascarilla": require('../../assets/uniforme/mascarilla.png'),
+        };
+        return imageMap[arrayDeCadenas[0].toLowerCase()] || require('../../assets/uniforme/chaleco.png');
+    }; 
     return(
         <View style={styles.container}>
             <View style={[styles.mainContainer,{flex: 1 }]}>
